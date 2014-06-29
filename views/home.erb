@@ -1,0 +1,53 @@
+<br/>
+<br/>
+<br/>
+
+<% (1..pages).each do |npage| %>
+  <% if npage != page %>
+    <span>
+      <a href="<%= "/?page=#{npage}" %>" class="btn btn-xs btn-default">
+        <%= npage %>
+      </a>
+    </span>
+  <% else %>
+    <span>
+      <a href="<%= "/?page=#{npage}" %>" class="btn btn-xs btn-success">
+        <%= npage %>
+      </a>
+    </span>
+  <% end %>
+<% end %>
+
+<br/>
+<hr/>
+<br/>
+<% files.each do |file| %>
+    <% if file.match /\.wav$/ %>
+  <div class="col-md-3 audio" style="margin-bottom:20px; display:block">
+    <audio controls style="width:260px;" >
+      <source src="<%= file.gsub(/^public/, "") %>" type="audio/wav">
+      Your browser does not support the audio element.
+    </audio>
+    <br/>
+    <br/>
+    <textarea cols="40" rows="3" id="<%= file + ".txt"%>"><%= File.open(file << ".txt").read.to_s.strip %></textarea>
+  </div>
+    <% end %>
+<% end %>
+
+<script type="text/javascript">
+$("div.audio textarea").focusin(function(event){
+  $(this).parents("div.audio").find("audio")[0].play()
+})
+    $("div.audio textarea").focusout(function(event){
+      var id = $(this).attr("id");
+      var value = $(this).val()
+      $.ajax({
+        type: "POST",
+        data:{ id: id, value: value },
+        url: "/update"
+      })
+    })
+
+</script>
+

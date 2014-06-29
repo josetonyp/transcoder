@@ -1,0 +1,33 @@
+<html>
+  <head>
+    <title>My Fast Transcriber</title>
+
+    <script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+
+
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+
+  </head>
+  <body>
+
+    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="/">Files: (<%= total %>)</a>
+        </div>
+        <div class="navbar-collapse collapse">
+
+        </div><!--/.navbar-collapse -->
+      </div>
+    </div>
+
+    <div class="container">
+      <%= yield %>
+    </div>
+
+
+  </body>
+</html>

@@ -1,0 +1,7 @@
+Gemfile.lock
+db/development.sqlite3
+.ruby-*
+public/audio/*.txt
+public/audio/*.wav
+public/audio/*.csv
+.bundle
