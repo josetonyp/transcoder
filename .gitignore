@@ -4,5 +4,6 @@ db/development.sqlite3
 public/audio/*.txt
 public/audio/*.wav
 public/audio/*.csv
+public/output/*.txt
 public/files.zip
 .bundle

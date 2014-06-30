@@ -2,6 +2,7 @@
 require 'sinatra'
 require 'pry'
 require 'zip'
+require 'fileutils'
 
 get '/' do
   page = params["page"].to_i || 1
@@ -20,9 +21,7 @@ end
 post  "/save" do
   params["files"].each do |file|
     begin
-      File.rename file, file.gsub("audio/", "output/")
-      File.delete( file.gsub(/\.txt$/, "") )
-      # File.delete( file )
+      FileUtils.copy file, file.gsub("audio/", "output/")
     rescue
       # :P
     end
@@ -32,6 +31,7 @@ end
 get "/files" do
   zipfile_name = "public/files.zip"
   File.delete( zipfile_name ) if File.exist?( zipfile_name)
+
   Zip::File.open(zipfile_name, Zip::File::CREATE) do |zipfile|
     Dir.glob( "public/output/*" ).each do |filename|
       # Two arguments:

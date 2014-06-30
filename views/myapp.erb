@@ -19,7 +19,7 @@
         <div class="navbar-header">
           <a href="#" class="btn btn-xs">Files: (<%= total %>)</a>
           <a href="#" class="btn btn-xs"> Ready: (<%= ready_files %>)</a>
-          <% if total == 0 %>
+          <% if total == ready_files %>
             <a href="/files" class="btn btn-xs btn-success"> Download </a>
           <% end %>
         </div>

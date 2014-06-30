@@ -45,7 +45,9 @@
       </audio>
       <br/>
       <br/>
-      <textarea tabindex="<%= index + 1 %>" cols="40" rows="2" id="<%= file + ".txt"%>"><%= ( (text = File.open(file << ".txt").read.to_s.strip) != "" ) ? text : "[bad wave] ??" %></textarea>
+      <% color = (File.exists?(file.gsub("audio/", "output/") + ".txt")) ? "green" : "black" %>
+      <% size = (File.exists?(file.gsub("audio/", "output/") + ".txt")) ? 2 : 1 %>
+      <textarea tabindex="<%= index + 1 %>" cols="40" rows="2" id="<%= file + ".txt"%>" style="border: <%= size %>px solid <%= color %>;"><%= ( (text = File.open(file + ".txt").read.to_s.strip) != "" ) ? text : "[bad wave] ??" %></textarea>
     </div>
       <% end %>
   <% end %>
@@ -58,7 +60,7 @@
 <div class="col-md-12" style="text-align:center;">
   <p>
     <% if total == 0 %>
-      <a href="/files" class="btn btn-lg btn-success"> Download </a>
+      <a href="/files" class="btn btn-xs btn-success"> Download </a>
     <% else %>
       <a href="/save" class="btn btn-lg btn-success" id="save_all">Save</a>
     <% end %>
