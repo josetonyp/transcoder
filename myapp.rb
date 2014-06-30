@@ -23,7 +23,7 @@ get '/' do
   page = params["page"].to_i || 1
   per_page=20
   from = (page - 1) * per_page
-  to = from + per_page
+  to = from + (per_page-1)
   files = Dir.glob( "public/audio/*.wav" )
   erb :home, :layout=>:myapp, locals: { files: files[from..to], total: files.count, page:page, pages: (files.count / per_page).ceil }
 end
