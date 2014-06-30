@@ -1,7 +1,21 @@
+
 <br/>
 <br/>
 <br/>
 
+<div id="leyend" class="col-xs-6 col-sm-3" style="position:fixed; left:0px;" >
+  <p>
+    <div><em>ctrl+m</em> : <span style="color:#aaa"> [m]</span></div>
+    <div><em>ctrl+l</em> : <span style="color:#aaa"> [f]</span></div>
+    <div><em>ctrl+c</em> : <span style="color:#aaa">\contact</span></div>
+    <div><em>ctrl+j</em> : <span style="color:#aaa">\mp</span></div>
+    <div><em>ctrl+u</em> : <span style="color:#aaa">\noise:unintelligeble</span></div>
+    <div><em>ctrl+i</em> : <span style="color:#aaa">&lt;intruder&gt;</span></div>
+    <div><em>ctrl+w</em> : <span style="color:#aaa">[bad wave]</span></div>
+    <div><em>ctrl+,</em> : <span style="color:#aaa">\comma\</span></div>
+    <div><em>ctrl+.</em> : <span style="color:#aaa">\period\</span></div>
+  </p>
+</div>
 <% (1..pages).each do |npage| %>
   <% if npage != page %>
     <span>
@@ -21,23 +35,38 @@
 <br/>
 <hr/>
 <br/>
-<% files.each_with_index do |file, index| %>
-    <% if file.match /\.wav$/ %>
-  <div class="col-md-3 audio" style="margin-bottom:20px; display:block">
-    <audio controls style="width:260px;" tabindex="0" >
-      <source src="<%= file.gsub(/^public/, "") %>" type="audio/wav">
-      Your browser does not support the audio element.
-    </audio>
-    <br/>
-    <br/>
-    <textarea tabindex="<%= index + 1 %>" cols="40" rows="3" id="<%= file + ".txt"%>"><%= File.open(file << ".txt").read.to_s.strip %></textarea>
-  </div>
+<div>
+  <% files.each_with_index do |file, index| %>
+      <% if file.match /\.wav$/ %>
+    <div class="col-md-3 audio" style="margin-bottom:20px; display:block">
+      <audio controls style="width:260px;" tabindex="0" >
+        <source src="<%= file.gsub(/^public/, "") %>" type="audio/wav">
+        Your browser does not support the audio element.
+      </audio>
+      <br/>
+      <br/>
+      <textarea tabindex="<%= index + 1 %>" cols="40" rows="2" id="<%= file + ".txt"%>"><%= ( (text = File.open(file << ".txt").read.to_s.strip) != "" ) ? text : "[bad wave] ??" %></textarea>
+    </div>
+      <% end %>
+  <% end %>
+</div>
+
+<br/>
+<hr/>
+<br/>
+
+<div class="col-md-12" style="text-align:center;">
+  <p>
+    <% if total == 0 %>
+      <a href="/files" class="btn btn-lg btn-success"> Download </a>
+    <% else %>
+      <a href="/save" class="btn btn-lg btn-success" id="save_all">Save</a>
     <% end %>
-<% end %>
+  </p>
+</div>
 
 <script type="text/javascript">
     $("div.audio textarea").keypress(function(event) {
-      console.log( event.which )
       if (event.ctrlKey && (event.which != 63234 || event.which != 63235) ){
 
         var text = (function() {
@@ -70,7 +99,7 @@
       return true;
     });
     $("div.audio textarea").focusin(function(event){
-      // $(this).parents("div.audio").find("audio")[0].play()
+      $(this).parents("div.audio").find("audio")[0].play()
     })
     $("div.audio textarea").focusout(function(event){
       var id = $(this).attr("id");
@@ -81,6 +110,21 @@
         url: "/update"
       })
     })
+
+    $("#save_all").click(function(event){
+      event.preventDefault()
+      var files = $.map( $("div.audio textarea"), function(val, index){
+         return val.id ;
+      } )
+      $.ajax({
+        type: "POST",
+        data:{ files: files},
+        url: "/save",
+        success: function(response){
+          location.reload(true);
+        }
+      })
+    });
 
 </script>
 

@@ -17,7 +17,11 @@
     <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
       <div class="container">
         <div class="navbar-header">
-          <a class="navbar-brand" href="/">Files: (<%= total %>)</a>
+          <a href="#" class="btn btn-xs">Files: (<%= total %>)</a>
+          <a href="#" class="btn btn-xs"> Ready: (<%= ready_files %>)</a>
+          <% if total == 0 %>
+            <a href="/files" class="btn btn-xs btn-success"> Download </a>
+          <% end %>
         </div>
         <div class="navbar-collapse collapse">
 
