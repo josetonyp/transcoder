@@ -49,7 +49,7 @@
       </audio>
             <% color = (File.exists?(file.gsub("audio/", "output/") + ".txt")) ? "green" : "black" %>
       <% size = (File.exists?(file.gsub("audio/", "output/") + ".txt")) ? 2 : 1 %>
-      <textarea tabindex="<%= index + 1 %>" cols="50" rows="1" id="<%= file + ".txt"%>" style="float: left ; margin-left: 5px; border: <%= size %>px solid <%= color %>;"><%= ( (text = File.open(file + ".txt").read.to_s.strip) != "" ) ? text : "[bad wave] ??" %></textarea>
+      <textarea tabindex="<%= index + 1 %>" cols="60" rows="1" id="<%= file + ".txt"%>" style="float: left ; margin-left: 5px; border: <%= size %>px solid <%= color %>;"><%= ( (text = File.open(file + ".txt").read.to_s.strip) != "" ) ? text : "[bad wave] ??" %></textarea>
     </div>
       <% end %>
   <% end %>
