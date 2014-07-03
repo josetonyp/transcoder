@@ -3,7 +3,7 @@
 <br/>
 <br/>
 
-<div id="leyend" class="col-xs-6 col-sm-3" style="position:absolute; right:0px;" >
+<div id="leyend" class="col-xs-6 col-sm-3" style="position:absolute; right:0px; text-align: right; top: 120px;" >
   <p>
     <div><em>ctrl+m</em> : <span style="color:#aaa"> [m]</span></div>
     <div><em>ctrl+l</em> : <span style="color:#aaa"> [f]</span></div>
@@ -47,7 +47,7 @@
       </audio>
             <% color = (File.exists?(file.gsub("audio/", "output/") + ".txt")) ? "green" : "black" %>
       <% size = (File.exists?(file.gsub("audio/", "output/") + ".txt")) ? 2 : 1 %>
-      <textarea tabindex="<%= index + 1 %>" cols="60" rows="1" id="<%= file + ".txt"%>" style="float: left ; margin-left: 5px; border: <%= size %>px solid <%= color %>;"><%= ( (text = File.open(file + ".txt").read.to_s.strip) != "" ) ? text : "[bad wave] ??" %></textarea>
+      <textarea tabindex="<%= index + 1 %>" cols="50" rows="1" id="<%= file + ".txt"%>" style="float: left ; margin-left: 5px; border: <%= size %>px solid <%= color %>;"><%= ( (text = File.open(file + ".txt").read.to_s.strip) != "" ) ? text : "[bad wave] ??" %></textarea>
     </div>
       <% end %>
   <% end %>
