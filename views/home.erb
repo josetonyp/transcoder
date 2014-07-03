@@ -3,7 +3,7 @@
 <br/>
 <br/>
 
-<div id="leyend" class="col-xs-6 col-sm-3" style="position:fixed; left:0px;" >
+<div id="leyend" class="col-xs-6 col-sm-3" style="position:absolute; right:0px;" >
   <p>
     <div><em>ctrl+m</em> : <span style="color:#aaa"> [m]</span></div>
     <div><em>ctrl+l</em> : <span style="color:#aaa"> [f]</span></div>
@@ -16,48 +16,46 @@
     <div><em>ctrl+.</em> : <span style="color:#aaa">\period\</span></div>
   </p>
 </div>
-<% (1..pages).each do |npage| %>
-  <% if npage != page %>
-    <span>
-      <a href="<%= "/?page=#{npage}" %>" class="btn btn-xs btn-default">
-        <%= npage %>
-      </a>
-    </span>
-  <% else %>
-    <span>
-      <a href="<%= "/?page=#{npage}" %>" class="btn btn-xs btn-success">
-        <%= npage %>
-      </a>
-    </span>
-  <% end %>
-<% end %>
-
-<br/>
+<div class="row">
+  <div class="col-md-12">
+    <% (1..(pages+1)).each do |npage| %>
+      <% if npage != page %>
+        <span>
+          <a href="<%= "/?page=#{npage}" %>" class="btn btn-xs btn-default">
+            <%= npage %>
+          </a>
+        </span>
+      <% else %>
+        <span>
+          <a href="<%= "/?page=#{npage}" %>" class="btn btn-xs btn-success">
+            <%= npage %>
+          </a>
+        </span>
+      <% end %>
+    <% end %>
+  </div>
+</div>
 <hr/>
-<br/>
-<div>
+
+<div class="row">
   <% files.each_with_index do |file, index| %>
       <% if file.match /\.wav$/ %>
-    <div class="col-md-3 audio" style="margin-bottom:20px; display:block">
-      <audio controls style="width:260px;" tabindex="0" >
+    <div class="col-md-5 audio" style="margin-bottom:3px">
+      <audio style="width:47px; display:block; float: left ;" tabindex="0" controls >
         <source src="<%= file.gsub(/^public/, "") %>" type="audio/wav">
         Your browser does not support the audio element.
       </audio>
-      <br/>
-      <br/>
-      <% color = (File.exists?(file.gsub("audio/", "output/") + ".txt")) ? "green" : "black" %>
+            <% color = (File.exists?(file.gsub("audio/", "output/") + ".txt")) ? "green" : "black" %>
       <% size = (File.exists?(file.gsub("audio/", "output/") + ".txt")) ? 2 : 1 %>
-      <textarea tabindex="<%= index + 1 %>" cols="40" rows="2" id="<%= file + ".txt"%>" style="border: <%= size %>px solid <%= color %>;"><%= ( (text = File.open(file + ".txt").read.to_s.strip) != "" ) ? text : "[bad wave] ??" %></textarea>
+      <textarea tabindex="<%= index + 1 %>" cols="60" rows="1" id="<%= file + ".txt"%>" style="float: left ; margin-left: 5px; border: <%= size %>px solid <%= color %>;"><%= ( (text = File.open(file + ".txt").read.to_s.strip) != "" ) ? text : "[bad wave] ??" %></textarea>
     </div>
       <% end %>
   <% end %>
 </div>
 
-<br/>
 <hr/>
-<br/>
 
-<div class="col-md-12" style="text-align:center;">
+<div class="row" style="text-align:center;">
   <p>
     <% if total == 0 %>
       <a href="/files" class="btn btn-xs btn-success"> Download </a>
@@ -73,10 +71,10 @@
 
         var text = (function() {
           switch (event.which) {
-            case 12: //m
-              return " [m]";
-            case 13: //l
+            case 12: //f
               return " [f]";
+            case 13: //m
+              return " [m]";
             case 3: //c
               return "\\contact ";
             case 10: // j

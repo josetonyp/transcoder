@@ -5,8 +5,8 @@ require 'zip'
 require 'fileutils'
 
 get '/' do
-  page = params["page"].to_i || 1
-  per_page=20
+  page = params["page"].nil? ? 1 : params["page"].to_i
+  per_page=30
   from = (page - 1) * per_page
   to = from + (per_page-1)
   files = Dir.glob( "public/audio/*.wav" )
