@@ -9,8 +9,10 @@
     <div><em>ctrl+l</em> : <span style="color:#aaa"> [f]</span></div>
     <div><em>ctrl+c</em> : <span style="color:#aaa">\contact</span></div>
     <div><em>ctrl+j</em> : <span style="color:#aaa">\mp</span></div>
+    <div><em>ctrl+i</em> : <span style="color:#aaa">\i:</span></div>
     <div><em>ctrl+u</em> : <span style="color:#aaa">\noise:unintelligeble</span></div>
-    <div><em>ctrl+i</em> : <span style="color:#aaa">&lt;intruder&gt;</span></div>
+    <div><em>ctrl+g</em> : <span style="color:#aaa">\noise:bgspeech</span></div>
+    <div><em>ctrl+r</em> : <span style="color:#aaa">&lt;intruder&gt;</span></div>
     <div><em>ctrl+w</em> : <span style="color:#aaa">[bad wave]</span></div>
     <div><em>ctrl+,</em> : <span style="color:#aaa">\comma\</span></div>
     <div><em>ctrl+.</em> : <span style="color:#aaa">\period\</span></div>
@@ -78,17 +80,21 @@
             case 3: //c
               return "\\contact ";
             case 10: // j
-              return "\\mp ";
+              return "\\mp: ";
             case 21: //u
               return "\\noise:unintelligeble ";
             case 9: // i
-              return "<intruder1>";
+              return "\\i:";
+            case 18: // r
+              return "<intruder> </intruder>";
             case 23: // w
               return "[bad wave]";
             case 44: // , comma
               return "\\comma\\";
             case 46: // . period
               return "\\period\\";
+            case 7: // g
+              return "\\noise:bgspeech";
             default:
               return "";
           }
