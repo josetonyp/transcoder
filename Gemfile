@@ -9,3 +9,6 @@ gem 'unicorn'
 gem 'pry'
 gem 'pry-doc'
 gem 'rubyzip'
+gem 'mongoid'
+gem "will_paginate_mongoid"
+gem 'bcrypt'

@@ -1,38 +1,68 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html lang="en" ng-app="Translator" class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html lang="en" ng-app="Translator" class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html lang="en" ng-app="Translator" class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html lang="en" ng-app="Translator" class="no-js"> <!--<![endif]-->
 <html>
   <head>
     <title>My Fast Transcriber</title>
 
-    <script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
-    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
-    <script src="/javascripts/jquery.textarea.caret.js"></script>
 
+    <link rel="stylesheet" href="/javascripts/bower_components/bootstrap/dist/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="/javascripts/bower_components/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/app.css">
 
-    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
-
-    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
 
   </head>
   <body>
 
-    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-      <div class="container">
+    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation" ng-controller="MenuController">
+      <div class="container-fluid">
         <div class="navbar-header">
-          <a href="#" class="btn btn-xs">Files: (<%= total %>)</a>
-          <a href="#" class="btn btn-xs"> Ready: (<%= ready_files %>)</a>
-          <% if total == ready_files %>
-            <a href="/files" class="btn btn-xs btn-success"> Download </a>
-          <% end %>
+          <a class="navbar-brand" href="#/home">Folders ({{folders.length}})</a>
+          <a class="navbar-brand" href="#/users">Users</a>
         </div>
         <div class="navbar-collapse collapse">
-
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="#/me">User</a></li>
+          </ul>
         </div><!--/.navbar-collapse -->
       </div>
     </div>
+    <br/>
+    <br/>
+    <br/>
+    <div class="container" >
+      <div class="row">
+        <div class="col-md-9" ng-view><%= yield %></div>
+        <div class="col-md-3">
+          <p>
+            <div><em>ctrl+m</em> : <span style="color:#aaa"> [m]</span></div>
+            <div><em>ctrl+l</em> : <span style="color:#aaa"> [f]</span></div>
+            <div><em>ctrl+c</em> : <span style="color:#aaa">\contact</span></div>
+            <div><em>ctrl+j</em> : <span style="color:#aaa">\mp</span></div>
+            <div><em>ctrl+i</em> : <span style="color:#aaa">\i:</span></div>
+            <div><em>ctrl+u</em> : <span style="color:#aaa">\noise:unintelligeble</span></div>
+            <div><em>ctrl+g</em> : <span style="color:#aaa">\noise:bgspeech</span></div>
+            <div><em>ctrl+r</em> : <span style="color:#aaa">&lt;intruder&gt;</span></div>
+            <div><em>ctrl+w</em> : <span style="color:#aaa">[bad wave]</span></div>
+            <div><em>ctrl+,</em> : <span style="color:#aaa">\comma\</span></div>
+            <div><em>ctrl+.</em> : <span style="color:#aaa">\period\</span></div>
+          </p>
+        </div>
+      </div>
 
-    <div class="container">
-      <%= yield %>
+
     </div>
 
 
+    <script src="/javascripts/bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="/javascripts/jquery.textarea.caret.js"></script>
+    <script src="/javascripts/bower_components/angular/angular.js"></script>
+    <script src="/javascripts/bower_components/angular-route/angular-route.js"></script>
+    <script src="/javascripts/bower_components/lodash/dist/lodash.min.js"></script>
+    <script src="/javascripts/bower_components/restangular/dist/restangular.min.js"></script>
+    <script src="/javascripts/app.js"></script>
   </body>
+
 </html>

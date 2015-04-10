@@ -1,9 +1,10 @@
 Gemfile.lock
 db/development.sqlite3
+data*
+log
 .ruby-*
-public/audio/*.txt
-public/audio/*.wav
-public/audio/*.csv
-public/output/*.txt
+public/audio/*
+public/bower_components
+public/output
 public/files.zip
 .bundle

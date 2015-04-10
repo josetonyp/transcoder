@@ -3,19 +3,42 @@ require 'sinatra'
 require 'pry'
 require 'zip'
 require 'fileutils'
+require 'mongoid'
+require 'will_paginate_mongoid'
+require 'bcrypt'
+require_relative 'models/user'
+require_relative 'models/audio'
+
+
+
+
+
+configure :development do
+
+  enable :sessions, :logging, :dump_errors, :inline_templates
+  set :session_secret, "asdfasfd asfda sfd asfd asfda"
+  logger = Logger.new($stdout)
+
+  Mongoid.load!("config/mongoid.yml")
+
+end
+
+get '/import' do
+  AudioFile.delete_all
+  Dir.glob( "public/audio/*.wav" ).map{|file| file.gsub("public/audio/", "") }.each do |file|
+    AudioFile.create!( name: file ) unless AudioFile.where(name: file).exists?
+  end
+end
 
 get '/' do
+  session['m'] = 'Hello World!' # Register user here
   page = params["page"].nil? ? 1 : params["page"].to_i
-  per_page=30
-  from = (page - 1) * per_page
-  to = from + (per_page-1)
-  files = Dir.glob( "public/audio/*.wav" )
-  ready_files = Dir.glob( "public/output/*" )
-  erb :home, :layout=>:myapp, locals: { files: files[from..to], total: files.count, page:page, pages: (files.count / per_page).ceil, ready_files:ready_files.count }
+  audios = AudioFile.paginate( page: page, per_page: 30 )
+  erb :empty, :layout=>:myapp
 end
 
 post  "/update" do
-  File.open(params["id"], "w"){|file| file.puts(params["value"].strip) }
+  AudioFile.where(name: params["id"]).first.update_attributes!( translation: params["value"].strip)
 end
 
 post  "/save" do
@@ -48,5 +71,59 @@ get "/files" do
 end
 
 
+# AudioFiles
+
+get '/audio_files' do
+  content_type :json
+  page = params["page"].nil? ? 1 : params["page"].to_i
+  AudioFile.paginate( page: page, per_page: 30 ).map(&:prep_json).to_json
+end
+
+get '/audio_files/review' do
+  content_type :json
+  page = params["page"].nil? ? 1 : params["page"].to_i
+  AudioFile.where(status:"translated").paginate( page: page, per_page: 30 ).map(&:prep_json).to_json
+end
+
+get '/audio_files/:file' do
+  content_type :json
+  AudioFile.find(params["file"]).to_json
+end
+
+put '/audio_files/:file' do
+  content_type :json
+  audio = AudioFile.find(params["file"])
+  audio.update_attributes!( translation: params["value"].strip, status: "translated" )
+  audio.to_json
+end
+
+put '/audio_files/:file/reviewed' do
+  content_type :json
+  audio = AudioFile.find(params["file"])
+  audio.update_attributes!( status: "reviewed" )
+  audio.to_json
+end
+
+
+# AudioFolders
+
+get '/audio_folders/import' do
+  content_type :json
+  AudioFile.destroy_all
+  AudioFolder.destroy_all
+  AudioFolder.import
+end
+
+get '/audio_folders' do
+  content_type :json
+  page = params["page"].nil? ? 1 : params["page"].to_i
+  AudioFile.paginate( page: page, per_page: 30 ).map(&:prep_json).to_json
+  AudioFolder.all.map(&:status).to_json
+end
+
+get '/audio_folders/:id' do
+  page = params["page"].nil? ? 1 : params["page"].to_i
+  AudioFolder.find(params[:id]).to_json
+end
 
 

@@ -1,0 +1,32 @@
+<div class="row">
+
+  <div class="table-responsive">
+    <table class="table table-bordered table-hover">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Name</th>
+          <th>Status</th>
+          <th>News</th>
+          <th>Translated</th>
+          <th>Reviewed</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="folder in folders track by $index">
+          <th>{{ $index }}</th>
+          <th>{{ folder.id }}</th>
+          <th>{{ folder.status }}</th>
+          <th>{{ folder.news }}</th>
+          <th>{{ folder.translated }}</th>
+          <th>{{ folder.reviewed }}</th>
+          <th>
+            <a href="#/folder/{{ folder.id }}" class="btn">Edit</a>
+          </th>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>
