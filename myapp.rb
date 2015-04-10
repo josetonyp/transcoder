@@ -93,7 +93,7 @@ end
 put '/audio_files/:file' do
   content_type :json
   audio = AudioFile.find(params["file"])
-  audio.update_attributes!( translation: params["value"].strip, status: "translated" )
+  audio.update_attributes!( translation: params["value"].strip, status: "translated" ) if params["value"] != "" && params["value"] != "[bad wave] ??"
   audio.to_json
 end
 
