@@ -16,7 +16,7 @@
       <tbody>
         <tr ng-repeat="folder in folders track by $index">
           <th>{{ $index }}</th>
-          <th>{{ folder.id }}</th>
+          <th><a href="#/folder/{{ folder.id }}" class="btn">{{ folder.id }}</a> [{{ folder.duration }}]</th>
           <th>{{ folder.status }}</th>
           <th>{{ folder.news }}</th>
           <th>{{ folder.translated }}</th>
@@ -27,6 +27,9 @@
         </tr>
       </tbody>
     </table>
+
+
+
   </div>
 
 </div>

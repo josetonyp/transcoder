@@ -5,7 +5,7 @@
 </div>
 <br/>
 <br/>
-<div class="row">
+<div class="row all_audios">
   <div class="col-md-6 audio" style="margin-bottom:3px" ng-repeat="audio in folder.audio_files track by $index">
     <div class="row audio-item" id="{{ audio.id }}">
       <audio class="col-xs-2" tabindex="0" controls >
@@ -15,4 +15,24 @@
       <textarea tabindex="{{ $index + 1}}" rows="1" id="{{ audio.id}}" class="audio-{{ audio.status }}  col-xs-10">{{ audio.translation }}</textarea>
     </div>
   </div>
+</div>
+
+<div class="row">
+<nav>
+  <ul class="pagination">
+    <li>
+      <a aria-label="Previous" ng-click="prevPage()">
+        <span >&laquo;</span>
+      </a>
+    </li>
+
+    <li ng-repeat="page in pages"><a href="#/folder/{{ folder.id }}?page={{page+1}}">{{page+1}}</a></li>
+
+    <li>
+      <a aria-label="Next" ng-click="nextPage()">
+        <span >&raquo;</span>
+      </a>
+    </li>
+  </ul>
+</nav>
 </div>

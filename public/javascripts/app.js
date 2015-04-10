@@ -18,6 +18,19 @@ config(['$routeProvider', function($routeProvider) {
       })
   .otherwise({redirectTo: '/home'});
 }])
+.factory('Satellite', function($rootScope) {
+  var msgBus;
+  msgBus = {};
+  msgBus.transmit = function(msg, value) {
+    return $rootScope.$emit(msg, value);
+  };
+  msgBus.listen = function(msg, scope, func) {
+    var unbind;
+    unbind = $rootScope.$on(msg, func);
+    return scope.$on('$destroy', unbind);
+  };
+  return msgBus;
+})
 .controller('MenuController', ['$scope', 'Restangular', function($scope, Restangular) {
   var audio_folders = Restangular.all("audio_folders");
   audio_folders.getList().then(function(folders) {
@@ -32,14 +45,33 @@ config(['$routeProvider', function($routeProvider) {
   });
 }])
 
-.controller('AudiosController', ['$scope', 'Restangular', '$routeParams', function($scope, Restangular, params)  {
+.controller('AudiosController', ['$scope', '$location', 'Restangular', '$routeParams','Satellite', function($scope,$location, Restangular, params, Satellite)  {
   var audio_folder = Restangular.one("audio_folders", params.id);
-  audio_folder.get().then(function(folder) {
+  if( _.isUndefined( params.page ) ){
+    var page = 1
+  }else{
+    var page = parseInt(params.page);
+  }
+  audio_folder.get( {page: page }).then(function(folder) {
     $scope.folder = folder;
+    $scope.pages = _.range(folder.pages);
+  });
+  $scope.nextPage = function(){
+    if (page < $scope.folder.pages)
+      $location.search( "page", page + 1 );
+  };
+  $scope.prevPage = function(){
+    if (page > 1)
+      $location.search( "page", page - 1 );
+  };
+  Satellite.listen("next_page", $scope, function() {
+    $scope.nextPage();
   });
 }])
 
-.directive('audioItem', [ 'Restangular', function(Restangular) {
+
+
+.directive('audioItem', [ 'Restangular', 'Satellite', function(Restangular, Satellite) {
   return {
     restrict: 'C',
     link: function(scope, element, attrs) {
@@ -88,9 +120,13 @@ config(['$routeProvider', function($routeProvider) {
 
       area.on("focusout", function(event) {
         var audio_file = Restangular.one("audio_files", element.attr("id"));
+        var  total_audios = $("textarea", element.parents(".all_audios")).length ;
         audio_file.put( {value: area.val()} ).then(function(audio) {
           scope.audio = audio;
-        })
+          if (area.attr("tabindex") == total_audios &&  audio.status != "new"){
+            Satellite.transmit("next_page");
+          }
+        });
       });
     }
   };

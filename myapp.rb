@@ -6,6 +6,7 @@ require 'fileutils'
 require 'mongoid'
 require 'will_paginate_mongoid'
 require 'bcrypt'
+require 'waveinfo'
 require_relative 'models/user'
 require_relative 'models/audio'
 
@@ -112,6 +113,7 @@ get '/audio_folders/import' do
   AudioFile.destroy_all
   AudioFolder.destroy_all
   AudioFolder.import
+  AudioFolder.all.map(&:status).to_json
 end
 
 get '/audio_folders' do
@@ -122,8 +124,9 @@ get '/audio_folders' do
 end
 
 get '/audio_folders/:id' do
+  content_type :json
   page = params["page"].nil? ? 1 : params["page"].to_i
-  AudioFolder.find(params[:id]).to_json
+  AudioFolder.find(params[:id]).prep_json( page ).to_json
 end
 
 
