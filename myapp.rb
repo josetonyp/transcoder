@@ -12,8 +12,6 @@ require_relative 'models/audio'
 
 
 
-
-
 configure :development do
 
   enable :sessions, :logging, :dump_errors, :inline_templates
@@ -71,38 +69,51 @@ get "/files" do
   send_file zipfile_name
 end
 
+before do
+  @user = session.key?("user") ?  User.find(session["user"]) : nil
+end
 
 # AudioFiles
 
 get '/audio_files' do
   content_type :json
-  page = params["page"].nil? ? 1 : params["page"].to_i
-  AudioFile.paginate( page: page, per_page: 30 ).map(&:prep_json).to_json
+  if @user
+    page = params["page"].nil? ? 1 : params["page"].to_i
+    AudioFile.paginate( page: page, per_page: 30 ).map(&:prep_json).to_json
+  end
 end
 
 get '/audio_files/review' do
   content_type :json
-  page = params["page"].nil? ? 1 : params["page"].to_i
-  AudioFile.where(status:"translated").paginate( page: page, per_page: 30 ).map(&:prep_json).to_json
+  if @user
+    page = params["page"].nil? ? 1 : params["page"].to_i
+    AudioFile.where(status:"translated").paginate( page: page, per_page: 30 ).map(&:prep_json).to_json
+  end
 end
 
 get '/audio_files/:file' do
   content_type :json
-  AudioFile.find(params["file"]).to_json
+  if @user
+    AudioFile.find(params["file"]).to_json
+  end
 end
 
 put '/audio_files/:file' do
   content_type :json
-  audio = AudioFile.find(params["file"])
-  audio.update_attributes!( translation: params["value"].strip, status: "translated" ) if params["value"] != "" && params["value"] != "[bad wave] ??"
-  audio.to_json
+  if @user
+    audio = AudioFile.find(params["file"])
+    audio.update_attributes!( translation: params["value"].strip, status: "translated", translator: @user ) if params["value"] != "" && params["value"] != "[bad wave] ??"
+    audio.to_json
+  end
 end
 
 put '/audio_files/:file/reviewed' do
   content_type :json
-  audio = AudioFile.find(params["file"])
-  audio.update_attributes!( status: "reviewed" )
-  audio.to_json
+  if @user
+    audio = AudioFile.find(params["file"])
+    audio.update_attributes!( status: "reviewed", reviewer: @user )
+    audio.to_json
+  end
 end
 
 
@@ -110,23 +121,60 @@ end
 
 get '/audio_folders/import' do
   content_type :json
-  AudioFile.destroy_all
-  AudioFolder.destroy_all
-  AudioFolder.import
-  AudioFolder.all.map(&:status).to_json
+  if @user && @user.admin
+    AudioFile.destroy_all
+    AudioFolder.destroy_all
+    AudioFolder.import
+    AudioFolder.all.map(&:status).to_json
+  end
 end
 
 get '/audio_folders' do
   content_type :json
-  page = params["page"].nil? ? 1 : params["page"].to_i
-  AudioFile.paginate( page: page, per_page: 30 ).map(&:prep_json).to_json
-  AudioFolder.all.map(&:status).to_json
+  if @user
+    page = params["page"].nil? ? 1 : params["page"].to_i
+    AudioFile.paginate( page: page, per_page: 30 ).map(&:prep_json).to_json
+    AudioFolder.all.map(&:status).to_json
+  end
 end
 
 get '/audio_folders/:id' do
   content_type :json
-  page = params["page"].nil? ? 1 : params["page"].to_i
-  AudioFolder.find(params[:id]).prep_json( page ).to_json
+  if @user
+    page = params["page"].nil? ? 1 : params["page"].to_i
+    AudioFolder.find(params[:id]).prep_json( page ).to_json
+  end
+end
+
+
+# User
+
+get '/users' do
+  if @user and @user.admin
+    User.all.map(&:prep_json).to_json
+  end
+end
+
+get '/account' do
+  @user.to_json
+end
+
+post '/account/login' do
+  content_type :json
+  params =  JSON.parse(request.body.read)
+  user = User.where( email:params["email"]).first
+  if user && user.password == params["password"]
+    user.token = SecureRandom.urlsafe_base64(nil, false)
+    session["user"] = user.id
+    user.to_json
+  else
+    session.destroy
+    {}.to_json
+  end
+end
+
+post '/account/logout' do
+  session.destroy
 end
 
 

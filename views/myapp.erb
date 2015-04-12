@@ -18,13 +18,15 @@
 
     <div class="navbar navbar-inverse navbar-fixed-top" role="navigation" ng-controller="MenuController">
       <div class="container-fluid">
-        <div class="navbar-header">
-          <a class="navbar-brand" href="#/home">Folders ({{folders.length}})</a>
-          <a class="navbar-brand" href="#/users">Users</a>
+        <div class="navbar-header" >
+          <a class="navbar-brand" ng-show="user" href="#/home">Folders ({{folders.length}})</a>
+          <a class="navbar-brand" ng-show="user.admin" href="#/users">Users</a>
         </div>
         <div class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
-            <li><a href="#/me">User</a></li>
+            <li ng-show="user"><a href="#" >{{ user.audios.total_time }} | {{ user.audios.translated }} | {{ user.audios.reviewed }} </a></li>
+            <li ng-show="user"><a href="#" >{{ user.name }}</a></li>
+            <li><a href="#" ng-click="signout()">Logout</a></li>
           </ul>
         </div><!--/.navbar-collapse -->
       </div>

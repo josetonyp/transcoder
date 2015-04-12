@@ -4,15 +4,16 @@ class AudioFile
 
 
   belongs_to :audio_folder
+  belongs_to :translator , class_name: "User"
+  belongs_to :reviewer , class_name: "User"
 
   default_scope order_by(:id => 'asc')
 
   field :name, type: String
   field :translation, type: String
   field :status, type: String, default: "new"
-  field :translator, type: String
   field :file, type: String
-  field :duration, type: Time
+  field :duration, type: Float
 
   def prep_json
     {
@@ -22,7 +23,7 @@ class AudioFile
       status: status,
       translator: translator,
       public_file: file.gsub("public", ""),
-      duration: duration.gmtime.strftime('%R:%S'),
+      duration: Time.at(duration).gmtime.strftime('%R:%S'),
       audio_folder: audio_folder.id
     }
   end
@@ -71,7 +72,7 @@ class AudioFolder
           entry.extract(outfile) unless File.exists?(outfile)
 
           wave = WaveInfo.new(outfile)
-          audio.update_attributes!( duration: Time.at(wave.duration))
+          audio.update_attributes!( duration: wave.duration )
           seconds + wave.duration
         else
           seconds
@@ -96,7 +97,7 @@ class AudioFolder
       translated: audio_files.where( status: "translated").count,
       audio_files: audio_files.paginate(page:page, per_page: 30).map(&:prep_json),
       pages: audio_files.paginate(page:page, per_page: 30).total_pages,
-      duration: duration.strftime('%H:%M:%S')
+      duration: duration.gmtime.strftime('%H:%M:%S')
     }
   end
 
@@ -109,7 +110,7 @@ class AudioFolder
       reviewed: audio_files.where( status: "reviewed").count,
       news: audio_files.where( status: "new").count,
       translated: audio_files.where( status: "translated").count,
-      duration: duration.strftime('%H:%M:%S'),
+      duration: duration.gmtime.strftime('%H:%M:%S'),
     }
   end
 

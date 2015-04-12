@@ -5,8 +5,8 @@
 var Translator = angular.module('Translator', [
   'ngRoute',
   'restangular'
-]).
-config(['$routeProvider', function($routeProvider) {
+])
+.config(['$routeProvider', function($routeProvider) {
   $routeProvider
   .when('/home', {
     templateUrl: '/views/home.html',
@@ -16,8 +16,24 @@ config(['$routeProvider', function($routeProvider) {
     templateUrl: '/views/audios.html',
     controller: 'AudiosController'
       })
-  .otherwise({redirectTo: '/home'});
+  .when('/users', {
+    templateUrl: '/views/users.html',
+    controller: 'UsersController'
+      })
+  .when('/login', {
+    templateUrl: '/views/login.html',
+    controller: 'LoginController'
+      })
+  .otherwise({redirectTo: '/login'});
 }])
+.service('User', ['Restangular', function(Restangular) {
+  var token = "";
+  return {
+    login: Restangular.one("account"),
+    users: Restangular.all("users")
+  };
+}])
+
 .factory('Satellite', function($rootScope) {
   var msgBus;
   msgBus = {};
@@ -31,11 +47,36 @@ config(['$routeProvider', function($routeProvider) {
   };
   return msgBus;
 })
-.controller('MenuController', ['$scope', 'Restangular', function($scope, Restangular) {
+.controller('MenuController', ['$scope', 'Restangular', 'User', '$location', 'Satellite', function($scope, Restangular, User, $location, Satellite) {
   var audio_folders = Restangular.all("audio_folders");
   audio_folders.getList().then(function(folders) {
     $scope.folders = folders;
   });
+  $scope.user = false;
+
+  User.login.get().then(function(user) {
+    if (user!="null") {
+      $scope.user = user;
+    };
+  })
+
+  $scope.signout = function() {
+    event.preventDefault();
+    User.login.post("logout").then(function() {
+      $scope.user = false;
+      $location.path("/");
+    })
+    return false;
+  };
+
+  Satellite.listen("user_loggin", $scope, function() {
+    User.login.get().then(function(user) {
+      if (user!="null") {
+        $scope.user = user;
+      };
+    })
+  });
+
 }])
 
 .controller('HomeController', ['$scope', 'Restangular', function($scope, Restangular) {
@@ -43,6 +84,27 @@ config(['$routeProvider', function($routeProvider) {
   audio_folders.getList().then(function(folders) {
     $scope.folders = folders;
   });
+}])
+.controller('UsersController', ['$scope', 'Restangular', function($scope, Restangular) {
+  var users = Restangular.all("users")
+  users.getList().then(function(users) {
+    $scope.users = users;
+  });
+}])
+.controller('LoginController', ['$scope', 'Restangular', 'User', '$location', 'Satellite', function($scope, Restangular, User, $location, Satellite) {
+  $scope.login = {
+    email: "",
+    password: ""
+  };
+  $scope.loginSubmit= function(event) {
+    User.login.post("login",$scope.login).then(function(data) {
+      if ( ! _.isUndefined( data.email ) ) {
+        Satellite.transmit("user_loggin")
+        $location.path("/home");
+      };
+    });
+    return false;
+  };
 }])
 
 .controller('AudiosController', ['$scope', '$location', 'Restangular', '$routeParams','Satellite', function($scope,$location, Restangular, params, Satellite)  {
@@ -130,4 +192,14 @@ config(['$routeProvider', function($routeProvider) {
       });
     }
   };
+}])
+.run(['$rootScope', '$location', 'User', "Satellite", function($rootScope, $location, User, Satellite) {
+  $rootScope.$on("$routeChangeStart", function(args){
+    User.login.get().then(function(data) {
+      if ( data == "null" ) {
+        $location.path("/login");
+      };
+      Satellite.transmit("user_loggin");
+    })
+  })
 }]);
