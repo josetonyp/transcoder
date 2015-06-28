@@ -14,4 +14,5 @@ gem "will_paginate_mongoid"
 gem 'bcrypt'
 gem 'waveinfo'
 gem 'awesome_print'
+gem 'puma'
 
