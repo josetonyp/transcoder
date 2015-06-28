@@ -6,4 +6,6 @@ log
 public/audio/*
 public/bower_components
 public/files.zip
+folders/
 .bundle
+upload
