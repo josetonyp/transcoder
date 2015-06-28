@@ -67,31 +67,47 @@ class AudioFolder
   end
 
   def self.unzip(file)
-    name = file.gsub('folders/', 'folders/').gsub(".zip", "")
+    sanitize = ->(name){ name.gsub(".zip", "").gsub(/\s{2,}/, " ").gsub(/\s/, "_").match(/[^\/]*?$/).to_s }
+
+    name = sanitize.call(file)
     puts "Handling folder #{name}"
-    folder = create( name: name )
+    folder = unless where( name: name).exists?
+                create( name: name )
+             else
+                where(name: name).first
+             end
     FileUtils.mkdir_p "#{OUTFOLDER}/#{folder.id}"
     total = 0
+
     Zip::File.open(file) do |zip_file|
       total = zip_file.inject(0.0) do |seconds, entry|
         # Extract to file/directory/symlink
-        audio = if AudioFile.where( name: entry.to_s.gsub(".txt", "") ).exists?
-                  AudioFile.where( name: entry.to_s.gsub(".txt", "") ).first
+        entry_name = sanitize.call(entry.to_s)
+        entry_wav = entry_name.gsub(".txt", "")
+        p "Reading #{entry_name}"
+        return seconds.to_f if entry_name.blank? || entry_name.match(/^\./)
+
+        # binding.pry
+        audio = if AudioFile.where( name: entry_wav ).exists?
+                  AudioFile.where( name: entry_wav ).first
                 else
-                  AudioFile.create!( name: entry.to_s.gsub(".txt", "") )
+                  AudioFile.create!( name: entry_wav )
                 end
-        if entry.to_s.match(/.wav$/)
-          outfile = "#{OUTFOLDER}/#{folder.id}/#{entry}"
+        if entry_name.match(/\.wav$/)
+          outfile = "#{OUTFOLDER}/#{folder.id}/#{audio.id.to_s}.wav"
           audio.update_attributes(audio_folder: folder, file: outfile)
-          puts "Extracting #{entry.name}"
+          puts "Extracting #{entry.name} to #{outfile}"
           entry.extract(outfile) unless File.exists?(outfile)
 
           wave = WaveInfo.new(outfile)
           audio.update_attributes!( duration: wave.duration )
-          seconds + wave.duration
-        else
+          seconds.to_f + wave.duration
+        elsif entry_name.match(/\.txt$/)
+          puts "Reading from #{entry.name}"
           audio.update_attributes(audio_folder: folder, translation: zip_file.read(entry.to_s).strip)
-          seconds
+          seconds.to_f
+        else
+          seconds.to_f
         end
       end
     end
@@ -181,7 +197,7 @@ class AudioFolder
   end
 
   before_destroy do
-    File.delete(zipfile_name)
+    File.delete(zipfile_name) if File.exists?(zipfile_name)
     FileUtils.remove_dir(audio_wav_folder) if Dir.exists?(audio_wav_folder)
     FileUtils.remove_dir("#{audio_files_folder}") if Dir.exists?("#{audio_files_folder}")
   end
