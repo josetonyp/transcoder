@@ -5,6 +5,5 @@ log
 .ruby-*
 public/audio/*
 public/bower_components
-public/output
 public/files.zip
 .bundle

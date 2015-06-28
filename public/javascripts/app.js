@@ -14,8 +14,18 @@ var Translator = angular.module('Translator', [
       })
   .when('/folder/:id', {
     templateUrl: '/views/audios.html',
-    controller: 'AudiosController'
-      })
+    controller: 'AudiosController',
+    data: {
+      review: false
+    }
+  })
+  .when('/folder_review/:id', {
+    templateUrl: '/views/audios.html',
+    controller: 'AudiosController',
+    data: {
+      review: true
+    }
+  })
   .when('/users', {
     templateUrl: '/views/users.html',
     controller: 'UsersController'
@@ -47,6 +57,15 @@ var Translator = angular.module('Translator', [
   };
   return msgBus;
 })
+.controller('AppController', ['$scope', 'User', function($scope, User) {
+  $scope.user = false;
+
+  User.login.get().then(function(user) {
+    if (user!="null") {
+      $scope.user = user;
+    };
+  });
+}])
 .controller('MenuController', ['$scope', 'Restangular', 'User', '$location', 'Satellite', function($scope, Restangular, User, $location, Satellite) {
   var audio_folders = Restangular.all("audio_folders");
   audio_folders.getList().then(function(folders) {
@@ -107,7 +126,9 @@ var Translator = angular.module('Translator', [
   };
 }])
 
-.controller('AudiosController', ['$scope', '$location', 'Restangular', '$routeParams','Satellite', function($scope,$location, Restangular, params, Satellite)  {
+.controller('AudiosController', ['$scope', '$location', 'Restangular', '$routeParams','Satellite', '$route', function($scope,$location, Restangular, params, Satellite, $route)  {
+  $scope.review = $route.current.data.review;
+
   var audio_folder = Restangular.one("audio_folders", params.id);
   if( _.isUndefined( params.page ) ){
     var page = 1
@@ -139,6 +160,7 @@ var Translator = angular.module('Translator', [
     link: function(scope, element, attrs) {
       var audio = element.find("audio");
       var area = element.find("textarea");
+      var checkbox = element.find("checkbox");
 
       area.on("keypress", function(event) {
         if (event.ctrlKey && (event.which != 63234 || event.which != 63235) ){
@@ -182,14 +204,19 @@ var Translator = angular.module('Translator', [
 
       area.on("focusout", function(event) {
         var audio_file = Restangular.one("audio_files", element.attr("id"));
+
         var  total_audios = $("textarea", element.parents(".all_audios")).length ;
         audio_file.put( {value: area.val()} ).then(function(audio) {
           scope.audio = audio;
+          if(scope.review){
+            audio_file.put({ review: true }).then(function(audio) { scope.audio = audio; });
+          }
           if (area.attr("tabindex") == total_audios &&  audio.status != "new"){
             Satellite.transmit("next_page");
           }
         });
       });
+
     }
   };
 }])

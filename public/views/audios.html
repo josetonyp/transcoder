@@ -26,7 +26,12 @@
       </a>
     </li>
 
-    <li ng-repeat="page in pages"><a href="#/folder/{{ folder.id }}?page={{page+1}}">{{page+1}}</a></li>
+    <li ng-repeat="page in pages" ng-hide="{{review}}">
+      <a href="#/folder/{{ folder.id }}?page={{page+1}}">{{page+1}}</a>
+    </li>
+    <li ng-repeat="page in pages" ng-show="{{review}}">
+      <a href="#/folder_review/{{ folder.id }}?page={{page+1}}">{{page+1}}</a>
+    </li>
 
     <li>
       <a aria-label="Next" ng-click="nextPage()">

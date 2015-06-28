@@ -1,8 +1,9 @@
 .folder_name{
   font-size: 0.5 em;
 }
+.audio-new{ border: 2px solid red; }
 .audio-translated{ border: 2px solid yellow; }
-.audio-reviewed{ border: 2px solid yellow; }
+.audio-reviewed{ border: 2px solid green; }
 .form-signin {
   max-width: 330px;
   padding: 15px;

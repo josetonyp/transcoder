@@ -1,3 +1,6 @@
+# Start pry console
+# ./console
+
 # myapp.rb
 require 'sinatra'
 require 'pry'
@@ -7,26 +10,16 @@ require 'mongoid'
 require 'will_paginate_mongoid'
 require 'bcrypt'
 require 'waveinfo'
+require 'awesome_print'
 require_relative 'models/user'
 require_relative 'models/audio'
 
-
-
 configure :development do
-
   enable :sessions, :logging, :dump_errors, :inline_templates
   set :session_secret, "asdfasfd asfda sfd asfd asfda"
   logger = Logger.new($stdout)
 
   Mongoid.load!("config/mongoid.yml")
-
-end
-
-get '/import' do
-  AudioFile.delete_all
-  Dir.glob( "public/audio/*.wav" ).map{|file| file.gsub("public/audio/", "") }.each do |file|
-    AudioFile.create!( name: file ) unless AudioFile.where(name: file).exists?
-  end
 end
 
 get '/' do
@@ -34,39 +27,6 @@ get '/' do
   page = params["page"].nil? ? 1 : params["page"].to_i
   audios = AudioFile.paginate( page: page, per_page: 30 )
   erb :empty, :layout=>:myapp
-end
-
-post  "/update" do
-  AudioFile.where(name: params["id"]).first.update_attributes!( translation: params["value"].strip)
-end
-
-post  "/save" do
-  params["files"].each do |file|
-    begin
-      FileUtils.copy file, file.gsub("audio/", "output/")
-    rescue
-      # :P
-    end
-  end
-end
-
-get "/files" do
-  zipfile_name = "public/files.zip"
-  File.delete( zipfile_name ) if File.exist?( zipfile_name)
-
-  Zip::File.open(zipfile_name, Zip::File::CREATE) do |zipfile|
-    Dir.glob( "public/output/*" ).each do |filename|
-      # Two arguments:
-      # - The name of the file as it will appear in the archive
-      # - The original file, including the path to find it
-      zipfile.add(filename.gsub("public/output/",""),filename)
-    end
-  end
-  Dir.glob( "public/output/*" ).each do |filename|
-    File.delete( filename )
-  end
-
-  send_file zipfile_name
 end
 
 before do
@@ -102,32 +62,27 @@ put '/audio_files/:file' do
   content_type :json
   if @user
     audio = AudioFile.find(params["file"])
-    audio.update_attributes!( translation: params["value"].strip, status: "translated", translator: @user ) if params["value"] != "" && params["value"] != "[bad wave] ??"
-    audio.to_json
-  end
-end
-
-put '/audio_files/:file/reviewed' do
-  content_type :json
-  if @user
-    audio = AudioFile.find(params["file"])
-    audio.update_attributes!( status: "reviewed", reviewer: @user )
-    audio.to_json
+    if params['review'] == "true"
+      audio.update_attributes!( status: "reviewed", reviewer: @user )
+    else
+      audio.update_attributes!( translation: params["value"].strip, status: "translated", translator: @user ) if params["value"] != "" && params["value"] != "[bad wave] ??"
+    end
+    audio.reload.to_json
   end
 end
 
 
 # AudioFolders
 
-get '/audio_folders/import' do
-  content_type :json
-  if @user && @user.admin
-    AudioFile.destroy_all
-    AudioFolder.destroy_all
-    AudioFolder.import
-    AudioFolder.all.map(&:status).to_json
-  end
-end
+# get '/audio_folders/import' do
+#   content_type :json
+#   if @user && @user.admin
+#     AudioFile.destroy_all
+#     AudioFolder.destroy_all
+#     AudioFolder.import
+#     AudioFolder.all.map(&:status).to_json
+#   end
+# end
 
 get '/audio_folders' do
   content_type :json
@@ -142,10 +97,16 @@ get '/audio_folders/:id' do
   content_type :json
   if @user
     page = params["page"].nil? ? 1 : params["page"].to_i
-    AudioFolder.find(params[:id]).prep_json( page ).to_json
+    AudioFolder.find(params[:id]).prep_json( page, review: false ).to_json
   end
 end
 
+get '/audio_folders_dowload/:id' do
+  return unless @user
+  folder = AudioFolder.find(params[:id])
+  folder.build
+  send_file folder.zipfile_name, filename: folder.zipfile_name
+end
 
 # User
 

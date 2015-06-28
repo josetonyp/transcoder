@@ -26,6 +26,7 @@ class User
 
   def prep_json
     {
+      id: id.to_s,
       name: name,
       admin: admin,
       email: email,
