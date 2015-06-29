@@ -16,7 +16,12 @@ class AudioFile
   field :file, type: String
   field :duration, type: Float
 
+  index({ id: 1 }, {  name: "id_index" })
   index({ name: 1 }, { unique: true, name: "name_index" })
+  index({ audio_folder: 1 }, { name: "audio_folder_index" })
+  index({ status: 1 }, { name: "status_index" })
+  index({ audio_folder: 1, status: 1 }, { name: "audio_folder_status_index" })
+  index({ audio_folder: 1, status: 1, id: 1 }, { name: "id_audio_folder_status_index" })
 
   def prep_json(options={})
     {
@@ -25,7 +30,7 @@ class AudioFile
       translation: translation,
       status: status,
       translator: translator,
-      public_file: file.gsub('public', ''),
+      public_file: file.gsub('/public', ''),
       duration: Time.at(duration).gmtime.strftime('%R:%S'),
       audio_folder: audio_folder.id
     }.merge!(options)
@@ -43,6 +48,89 @@ class AudioFile
   def to_json
     prep_json.to_json
   end
+
+  def self.upfind( name, folder )
+    if where( name: name, audio_folder: folder ).exists?
+      where( name: name, audio_folder: folder ).first
+    else
+      create!( name: name, audio_folder: folder )
+    end
+  end
+
+  def waveme( outfile )
+    wave = WaveInfo.new(outfile)
+    update_attributes!( file: "/#{outfile}", duration: wave.duration )
+    self
+  end
+
+  def txtme( text )
+    update_attributes!( translation: text )
+    self
+  end
+
+end
+
+module Sanitize
+  def self.base(name)
+    name.gsub(/\s{2,}/, " ").gsub(/\s/, "_").match(/[^\/]*?$/).to_s
+  end
+  def self.zip( name )
+    base(name.gsub(".zip", ""))
+  end
+  def self.txt( name )
+    base(name.gsub(".txt", ""))
+  end
+end
+
+class Importer
+
+  include FileUtils
+
+  def initialize(path)
+    @path = path
+    @extract_foder = "#{APPROOT}/folders"
+  end
+
+  def import
+    destroy
+    system "unzip -q #{@path} -d #{dest_folder}"
+    delete
+    self
+  end
+
+  def balanced?
+    wavs.count == txts.count
+  end
+
+  def wavs
+    Dir.glob("#{dest_folder}/*.wav")
+  end
+
+  def txts
+    Dir.glob("#{dest_folder}/*.txt")
+  end
+
+  def sanitized_name
+    Sanitize::zip @path
+  end
+
+  def destroy
+    rm_rf(dest_folder) if Dir.exists?(dest_folder)
+  end
+
+  private
+
+  def delete
+    rm(@path)
+  end
+
+
+
+  def dest_folder
+    "#{@extract_foder}/#{sanitized_name}"
+  end
+
+
 end
 
 class AudioFolder
@@ -51,7 +139,7 @@ class AudioFolder
 
   default_scope ->(){ order_by( id: 'asc') }
 
-  INFOLDER = 'folders'
+  INFOLDER = "folders"
   OUTFOLDER = 'public/audio'
   OUTTXTFOLDER = 'public/output'
 
@@ -61,61 +149,51 @@ class AudioFolder
   has_many :audio_files, dependent: :delete
 
   def self.import
+    threads=[]
     Dir.glob("#{INFOLDER}/*.zip").each do |file|
-      unzip(file)
+      threads << Thread.new {
+        Importer.new(file).import.tap do |imported|
+
+          factory(imported.sanitized_name).tap do |folder|
+            imported.wavs.each do |wfile|
+              file = folder.digest_wav(wfile)
+              AudioFile.upfind( Sanitize::base(file), folder )
+                .waveme( file )
+                .txtme( File.read("#{wfile}.txt").strip )
+            end
+            folder.get_duration
+          end
+
+        end.destroy
+      }
     end
+    threads.map(&:join)
   end
 
-  def self.unzip(file)
-    sanitize = ->(name){ name.gsub(".zip", "").gsub(/\s{2,}/, " ").gsub(/\s/, "_").match(/[^\/]*?$/).to_s }
-
-    name = sanitize.call(file)
-    puts "Handling folder #{name}"
+  def self.factory( name )
     folder = unless where( name: name).exists?
-                create( name: name )
-             else
-                where(name: name).first
-             end
-    FileUtils.mkdir_p "#{OUTFOLDER}/#{folder.id}"
-    total = 0
-
-    Zip::File.open(file) do |zip_file|
-      total = zip_file.inject(0.0) do |seconds, entry|
-        # Extract to file/directory/symlink
-        entry_name = sanitize.call(entry.to_s)
-        entry_wav = entry_name.gsub(".txt", "")
-        p "Reading #{entry_name}"
-        return seconds.to_f if entry_name.blank? || entry_name.match(/^\./)
-
-        # binding.pry
-        audio = if AudioFile.where( name: entry_wav ).exists?
-                  AudioFile.where( name: entry_wav ).first
-                else
-                  AudioFile.create!( name: entry_wav )
-                end
-        if entry_name.match(/\.wav$/)
-          outfile = "#{OUTFOLDER}/#{folder.id}/#{audio.id.to_s}.wav"
-          audio.update_attributes(audio_folder: folder, file: outfile)
-          puts "Extracting #{entry.name} to #{outfile}"
-          entry.extract(outfile) unless File.exists?(outfile)
-
-          wave = WaveInfo.new(outfile)
-          audio.update_attributes!( duration: wave.duration )
-          seconds.to_f + wave.duration
-        elsif entry_name.match(/\.txt$/)
-          puts "Reading from #{entry.name}"
-          audio.update_attributes(audio_folder: folder, translation: zip_file.read(entry.to_s).strip)
-          seconds.to_f
-        else
-          seconds.to_f
-        end
-      end
-    end
-
-    folder.update_attributes!( duration: Time.at(total))
-    File.delete( file )
+        create( name: name )
+     else
+        where(name: name).first
+     end
+    FileUtils.rm_rf(folder.audio_wav_folder)
+    FileUtils.mkdir_p(folder.audio_wav_folder)
+    folder
   end
 
+  def digest_wav( wav_file )
+    FileUtils.cp(wav_file,audio_wav_folder)
+    "#{audio_wav_folder}/#{Sanitize::base(wav_file)}"
+  end
+
+  def get_duration
+    self.duration = audio_files.inject(0.0){|total,audio| total.to_f + audio.duration.to_f }
+    ap duration
+    save
+  end
+
+
+  # DONE
   def started
     audio_files.where( :translator_id.exists => true ).first
   end
@@ -131,31 +209,32 @@ class AudioFolder
   end
 
   def prep_json( page= 1, options = {})
-    puts page
+    audios = audio_files.paginate(page:page, per_page: 30)
     {
       id: id.to_s,
       name: name,
       audios: audio_files.count,
-      status: audio_files.where( :status.ne => "translated").none? ? "ready" : "on_process",
+      status: audio_files.where( :status.ne => "translated").count > 0 ? "ready" : "on_process",
       reviewed: audio_files.where( status: "reviewed").count,
       news: audio_files.where( status: "new").count,
       translated: audio_files.where( status: "translated").count,
-      audio_files: audio_files.paginate(page:page, per_page: 30).map{|a| a.prep_json(options) },
-      pages: audio_files.paginate(page:page, per_page: 30).total_pages,
+      audio_files: audios.map{|a| a.prep_json(options) },
+      pages: audios.total_pages,
       duration: duration.gmtime.strftime('%H:%M:%S'),
       responsable: responsable
     }
   end
 
   def status
+    files = AudioFile.where( audio_folder: id )
     {
       id: id.to_s,
       name: name,
-      audios: audio_files.count,
-      status: audio_files.where( :status.ne => "translated").none? ? "ready" : "on_process",
-      reviewed: audio_files.where( status: "reviewed").count,
-      news: audio_files.where( status: "new").count,
-      translated: audio_files.where( status: "translated").count,
+      audios: files.count,
+      status: files.only(:status).where( :status.ne => "translated").count > 0 ? "ready" : "on_process",
+      reviewed: files.only(:status).where( status: "reviewed").count,
+      news: files.only(:status).where( status: "new").count,
+      translated: files.only(:status).where( status: "translated").count,
       duration: duration.gmtime.strftime('%H:%M:%S'),
       responsable: responsable
     }

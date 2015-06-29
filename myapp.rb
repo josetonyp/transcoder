@@ -14,6 +14,8 @@ require 'awesome_print'
 require_relative 'models/user'
 require_relative 'models/audio'
 
+APPROOT = File.expand_path(File.dirname(__FILE__))
+
 configure :development do
   enable :sessions, :logging, :dump_errors, :inline_templates
   set :session_secret, "asdfasfd asfda sfd asfd asfda"

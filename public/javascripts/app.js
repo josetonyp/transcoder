@@ -57,7 +57,7 @@ var Translator = angular.module('Translator', [
   };
   return msgBus;
 })
-.controller('AppController', ['$scope', 'User', function($scope, User) {
+.controller('AppController', ['$scope', 'User', 'Restangular', function($scope, User,Restangular) {
   $scope.user = false;
 
   User.login.get().then(function(user) {
@@ -65,12 +65,12 @@ var Translator = angular.module('Translator', [
       $scope.user = user;
     };
   });
-}])
-.controller('MenuController', ['$scope', 'Restangular', 'User', '$location', 'Satellite', function($scope, Restangular, User, $location, Satellite) {
   var audio_folders = Restangular.all("audio_folders");
   audio_folders.getList().then(function(folders) {
     $scope.folders = folders;
   });
+}])
+.controller('MenuController', ['$scope', 'Restangular', 'User', '$location', 'Satellite', function($scope, Restangular, User, $location, Satellite) {
   $scope.user = false;
 
   User.login.get().then(function(user) {
@@ -99,10 +99,6 @@ var Translator = angular.module('Translator', [
 }])
 
 .controller('HomeController', ['$scope', 'Restangular', function($scope, Restangular) {
-  var audio_folders = Restangular.all("audio_folders");
-  audio_folders.getList().then(function(folders) {
-    $scope.folders = folders;
-  });
 }])
 .controller('UsersController', ['$scope', 'Restangular', function($scope, Restangular) {
   var users = Restangular.all("users")
@@ -135,6 +131,8 @@ var Translator = angular.module('Translator', [
   }else{
     var page = parseInt(params.page);
   }
+  $scope.current_page = page;
+  console.log($scope.current_page);
   audio_folder.get( {page: page }).then(function(folder) {
     $scope.folder = folder;
     $scope.pages = _.range(folder.pages);

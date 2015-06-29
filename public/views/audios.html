@@ -1,6 +1,12 @@
 <div class="row">
 
-  <div class="folder_name">{{ folder.name }} | {{ folder.news }} | {{ folder.translated }} | {{ folder.reviewed }} </div>
+  <div class="folder_name col-xs-11">{{ folder.name }}
+    <span class="label label-default">{{ folder.news }}</span>
+    <span class="label label-success">{{ folder.translated }}</span>
+    <span class="label label-info">{{ folder.reviewed }}</span>
+  </div>
+
+  <div class="label label-primary col-xs-1">{{ current_page }}</div>
 
 </div>
 <br/>
@@ -26,11 +32,11 @@
       </a>
     </li>
 
-    <li ng-repeat="page in pages" ng-hide="{{review}}">
-      <a href="#/folder/{{ folder.id }}?page={{page+1}}">{{page+1}}</a>
+    <li ng-repeat="page in pages" ng-hide="{{review}}" ng-class="{active: current_page == (page + 1) }">
+      <a href="#/folder/{{ folder.id }}?page={{page+1}}" >{{page+1}}</a>
     </li>
-    <li ng-repeat="page in pages" ng-show="{{review}}">
-      <a href="#/folder_review/{{ folder.id }}?page={{page+1}}">{{page+1}}</a>
+    <li ng-repeat="page in pages" ng-show="{{review}}" ng-class="{active: current_page == (page + 1) }">
+      <a href="#/folder_review/{{ folder.id }}?page={{page+1}}" >{{page+1}}</a>
     </li>
 
     <li>
