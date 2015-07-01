@@ -146,6 +146,7 @@ class AudioFolder
   field :name, type: String
   field :duration, type: Time
 
+  belongs_to :translator, class_name: 'User'
   has_many :audio_files, dependent: :delete
 
   def self.import
@@ -199,13 +200,17 @@ class AudioFolder
   end
 
   def responsable
-    return unless started
-    User.find( audio_files
-        .only(:translator)
-        .group_by(&:translator_id)
-        .inject({}){|m,pair| t,f = pair ;  m[t] = f.size if t ; m  }
-        .max_by(&:second)
-        .first)
+    return translator if translator
+    if !translator && audio_files.where( :status => "translated").count > 0
+      self.translator = User.find( audio_files
+          .only(:translator)
+          .group_by(&:translator_id)
+          .inject({}){|m,pair| t,f = pair ;  m[t] = f.size if t ; m  }
+          .max_by(&:second)
+          .first)
+      save
+    end
+    translator
   end
 
   def prep_json( page= 1, options = {})
