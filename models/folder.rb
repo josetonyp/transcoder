@@ -36,6 +36,10 @@ class AudioFolder
     threads.map(&:join)
   end
 
+  def name_short
+    name.gsub(/^.*?vices\./, "").split(".").join("-")
+  end
+
   def self.factory( name )
     folder = unless where( name: name).exists?
         create( name: name )
@@ -93,6 +97,7 @@ class AudioFolder
     {
       id: id.to_s,
       name: name,
+      name_short: name_short,
       completed: ((translated*100)/total).to_i,
       audios: total,
       status: files.only(:status).where( :status.ne => "new").count ==  total ? "ready" : "on_process",

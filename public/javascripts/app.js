@@ -70,9 +70,10 @@ var Translator = angular.module('Translator', [
   });
 
   Restangular.all("audio_folders").getList().then(function(folders) {
-    $scope.folders = _.sortBy(folders,function(folder) {
-      return ( folder.responsable ) ? folder.responsable.id : folder.responsable;
-    });
+    $scope.folders = folders;
+    // _.sortBy(folders,function(folder) {
+    //   return ( folder.responsable ) ? folder.responsable.id : folder.responsable;
+    // });
   });
 
 }])
@@ -113,9 +114,10 @@ var Translator = angular.module('Translator', [
   $scope.take = function(folder) {
     $scope.taking = true;
     Restangular.one("audio_folders", folder.id).put({}).then(function(newFolders) {
-        $scope.$parent.folders = _.sortBy(newFolders,function(folder) {
-        return ( folder.responsable ) ? folder.responsable.id : folder.responsable;
-      });
+        $scope.$parent.folders = newFolders
+        // _.sortBy(newFolders,function(folder) {
+        //   return ( folder.responsable ) ? folder.responsable.id : folder.responsable;
+        // });
       $scope.taking = false;
     });
   };
