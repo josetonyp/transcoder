@@ -15,8 +15,17 @@
 
   </div>
   <div class="col-xs-12 col-md-3">
-    <div class="label label-primary col-xs-12">{{ current_page }}</div>
+    <div class="label label-default col-xs-12" style="font-size:1em;">{{ folder.name_short }}</div>
     <br/>
+    <div class="label label-default col-xs-12">
+      <div class="progress">
+        <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="{{ folder.translated }}" aria-valuemin="0" aria-valuemax="{{ folder.audios }}" style="width: {{ folder.completed }}%">
+          {{ folder.completed }}%
+        </div>
+      </div>
+    </div>
+    <br/>
+    <div class="label label-primary col-xs-12">{{ current_page }}</div>
     <br/>
     <div class="label label-default col-xs-4">{{ folder.news }}</div>
     <div class="label label-success col-xs-4">{{ folder.translated }}</div>

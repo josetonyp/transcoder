@@ -76,18 +76,25 @@ class AudioFolder
 
   def prep_json( page= 1, options = {})
     audios = audio_files.paginate(page:page, per_page: 30)
+    files = AudioFile.where( audio_folder: id )
+    total = files.count
+    translations = files.only(:translation).where( :translation.ne => "").count
     {
       id: id.to_s,
       name: name,
+      name_short: name_short,
       audios: audio_files.count,
-      status: audio_files.where( :status.ne => "translated").count > 0 ? "ready" : "on_process",
-      reviewed: audio_files.where( status: "reviewed").count,
-      news: audio_files.where( status: "new").count,
-      translated: audio_files.where( status: "translated").count,
+      completed: ((translations*100)/total).to_i,
+      status: files.only(:status).where( :status.ne => "new").count ==  total ? "ready" : "on_process",
+      reviewed: audio_files.only(:status).where( status: "reviewed").count,
+      news: audio_files.only(:status).where( status: "new").count,
+      translated: translations,
       audio_files: audios.map{|a| a.prep_json(options) },
       pages: audios.total_pages,
       duration: duration.gmtime.strftime('%H:%M:%S'),
-      responsable: responsable
+      responsable: responsable,
+      hasResponsable: !responsable.nil?,
+      downloaded: downloaded
     }
   end
 
