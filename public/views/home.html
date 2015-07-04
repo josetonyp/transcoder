@@ -38,7 +38,7 @@
             </span>
             <span ng-show="user.admin">
               <a class="btn btn-warning" href="#/folder_review/{{ folder.id }}" class="btn">Review</a>
-              <a class="btn btn-success" ng-show="folderReady(folder)" href="/audio_folders_dowload/{{ folder.id }}" class="btn">Download</a>
+              <a class="btn" ng-class="{'btn-default': folder.downloaded, 'btn-success': !folder.downloaded}" ng-show="folderReady(folder)" href="/audio_folders_dowload/{{ folder.id }}" class="btn">Download</a>
             </span>
           </td>
         </tr>

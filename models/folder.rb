@@ -10,6 +10,7 @@ class AudioFolder
 
   field :name, type: String
   field :duration, type: Time
+  field :downloaded, type: Boolean, default: false
 
   belongs_to :translator, class_name: 'User'
   has_many :audio_files, dependent: :delete
@@ -93,20 +94,21 @@ class AudioFolder
   def status
     files = AudioFile.where( audio_folder: id )
     total = files.count
-    translated = files.only(:status).where( status: "translated").count
+    translations = files.only(:translation).where( :translation.ne => "").count
     {
       id: id.to_s,
       name: name,
       name_short: name_short,
-      completed: ((translated*100)/total).to_i,
+      completed: ((translations*100)/total).to_i,
       audios: total,
       status: files.only(:status).where( :status.ne => "new").count ==  total ? "ready" : "on_process",
       reviewed: files.only(:status).where( status: "reviewed").count,
       news: files.only(:status).where( status: "new").count,
-      translated: translated,
+      translated: translations,
       duration: duration.gmtime.strftime('%H:%M:%S'),
       responsable: responsable,
-      hasResponsable: !responsable.nil?
+      hasResponsable: !responsable.nil?,
+      downloaded: downloaded
     }
   end
 
@@ -132,6 +134,8 @@ class AudioFolder
   end
 
   def build
+    self.downloaded = true
+    save
     prepare_to_download
     File.delete( zipfile_name ) if File.exist?( zipfile_name)
 
