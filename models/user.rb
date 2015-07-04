@@ -52,6 +52,14 @@ class User
     }
   end
 
+  def min_json
+    {
+      id: id.to_s,
+      name: name,
+      admin: admin
+    }
+  end
+
   def to_json
     prep_json.to_json
   end

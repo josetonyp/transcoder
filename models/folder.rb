@@ -66,7 +66,7 @@ class AudioFolder
 
   def responsable
     return nil unless translator
-    translator.prep_json
+    translator.min_json
   end
 
   def prep_json( page= 1, options = {})

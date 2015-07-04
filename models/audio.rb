@@ -21,6 +21,7 @@ class AudioFile
   index({ audio_folder: 1 }, { name: "audio_folder_index" })
   index({ status: 1 }, { name: "status_index" })
   index({ audio_folder: 1, status: 1 }, { name: "audio_folder_status_index" })
+  index({ translator: 1, status: 1 }, { name: "translator_status_index" })
   index({ audio_folder: 1, status: 1, id: 1 }, { name: "id_audio_folder_status_index" })
 
   def prep_json(options={})
