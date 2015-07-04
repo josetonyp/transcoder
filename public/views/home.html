@@ -4,32 +4,42 @@
     <table class="table table-bordered table-hover">
       <thead>
         <tr>
-          <th>#</th>
+          <th>Me</th>
           <th>Name</th>
           <th>Status</th>
-          <th>New</th>
-          <th>Trs</th>
-          <th>Rev</th>
           <th></th>
         </tr>
       </thead>
       <tbody>
-        <tr ng-repeat="folder in folders track by $index">
-          <th>{{ $index }}</th>
-          <th>
-            <a class="btn btn-default" style="float:left" href="#/folder/{{ folder.id }}" class="btn">{{ folder.id }}</a>
-            <span style="float:right">[{{ folder.duration }}]</span>
-            <span style="float:left; clear:both;" ng-show="{{ folder.responsable }}">{{ folder.responsable.name }}</span>
-          </th>
-          <th>{{ folder.status }}</th>
-          <th>{{ folder.news }}</th>
-          <th>{{ folder.translated }}</th>
-          <th>{{ folder.reviewed }}</th>
-          <th>
-            <a class="btn btn-default" href="#/folder/{{ folder.id }}" class="btn">Edit</a>
-            <a class="btn btn-default" href="#/folder_review/{{ folder.id }}" ng-show="user.admin" class="btn">Review</a>
-            <a class="btn btn-default" href="/audio_folders_dowload/{{ folder.id }}" ng-show="user.admin" class="btn">Download</a>
-          </th>
+        <tr ng-repeat="folder in folders track by $index" ng-show="folderIsMine(folder)">
+          <td class="col-xs-1 text-center">
+            {{ folder.responsable.name }}</td>
+          <td class="col-xs-4">
+            <div>
+              <a class="btn btn-primary" ng-show="folderIsMine(folder)" style="float:left" href="#/folder/{{ folder.id }}" class="btn">{{ folder.id }}</a>
+              <span ng-hide="folderIsMine(folder)">{{ folder.id }}</span>
+              <span style="float:right">[{{ folder.duration }}]</span>
+            </div>
+          </td>
+          <td class="col-xs-3 text-center" >
+            <div class="progress">
+              <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="{{ folder.translated }}" aria-valuemin="0" aria-valuemax="{{ folder.audios }}" style="width: {{ folder.completed }}%">
+                <span class="sr-only">{{ folder.completed }}% Complete (success)</span>
+              </div>
+            </div>
+          </td>
+          <td>
+            <span ng-show="notResponsable(folder)">
+              <a class="btn btn-info" ng-click="take(folder)" class="btn btn-default">Take</a>
+            </span>
+            <span ng-show="folderIsMine(folder) && folder.hasResponsable">
+              <a class="btn btn-primary" href="#/folder/{{ folder.id }}" class="btn">Edit</a>
+            </span>
+            <span ng-show="user.admin">
+              <a class="btn btn-warning" href="#/folder_review/{{ folder.id }}" class="btn">Review</a>
+              <a class="btn btn-success" ng-show="folderReady(folder)" href="/audio_folders_dowload/{{ folder.id }}" class="btn">Download</a>
+            </span>
+          </td>
         </tr>
       </tbody>
     </table>

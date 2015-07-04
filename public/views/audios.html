@@ -1,49 +1,68 @@
 <div class="row">
 
-  <div class="folder_name col-xs-11">{{ folder.name }}
-    <span class="label label-default">{{ folder.news }}</span>
-    <span class="label label-success">{{ folder.translated }}</span>
-    <span class="label label-info">{{ folder.reviewed }}</span>
-  </div>
-
-  <div class="label label-primary col-xs-1">{{ current_page }}</div>
-
-</div>
-<br/>
-<br/>
-<div class="row all_audios">
-  <div class="col-md-6 audio" style="margin-bottom:3px" ng-repeat="audio in folder.audio_files track by $index">
-    <div class="row audio-item" id="{{ audio.id }}">
-      <audio class="col-xs-2" tabindex="0" controls >
-        <source src="{{ audio.public_file }}" type="audio/wav">
-        Your browser does not support the audio element.
-      </audio>
-      <textarea tabindex="{{ $index + 1}}" rows="1" id="{{ audio.id}}" class="audio-{{ audio.status }}  col-xs-10">{{ audio.translation }}</textarea>
+  <div class="col-xs-12 col-md-9">
+    <div class="row all_audios">
+      <div class="col-md-6 audio" style="margin-bottom:3px" ng-repeat="audio in folder.audio_files track by $index">
+        <div class="row audio-item" id="{{ audio.id }}">
+          <audio class="col-xs-2" tabindex="0" controls >
+            <source src="{{ audio.public_file }}" type="audio/wav">
+            Your browser does not support the audio element.
+          </audio>
+          <textarea tabindex="{{ $index + 1}}" rows="1" id="{{ audio.id}}" class="audio-{{ audio.status }}  col-xs-10">{{ audio.translation }}</textarea>
+        </div>
+      </div>
     </div>
+
   </div>
+  <div class="col-xs-12 col-md-3">
+    <div class="label label-primary col-xs-12">{{ current_page }}</div>
+    <br/>
+    <br/>
+    <div class="label label-default col-xs-4">{{ folder.news }}</div>
+    <div class="label label-success col-xs-4">{{ folder.translated }}</div>
+    <div class="label label-info col-xs-4">{{ folder.reviewed }}</div>
+    <br/>
+    <br/>
+
+    <p>
+      <div><em>ctrl+m</em> : <span style="color:#aaa"> [m]</span></div>
+      <div><em>ctrl+l</em> : <span style="color:#aaa"> [f]</span></div>
+      <div><em>ctrl+c</em> : <span style="color:#aaa">\contact</span></div>
+      <div><em>ctrl+j</em> : <span style="color:#aaa">\mp</span></div>
+      <div><em>ctrl+i</em> : <span style="color:#aaa">\i:</span></div>
+      <div><em>ctrl+u</em> : <span style="color:#aaa">\noise:unintelligeble</span></div>
+      <div><em>ctrl+g</em> : <span style="color:#aaa">\noise:bgspeech</span></div>
+      <div><em>ctrl+r</em> : <span style="color:#aaa">&lt;intruder&gt;</span></div>
+      <div><em>ctrl+w</em> : <span style="color:#aaa">[bad wave]</span></div>
+      <div><em>ctrl+,</em> : <span style="color:#aaa">\comma\</span></div>
+      <div><em>ctrl+.</em> : <span style="color:#aaa">\period\</span></div>
+    </p>
+  </div>
+
+
 </div>
 
 <div class="row">
-<nav>
-  <ul class="pagination">
-    <li>
-      <a aria-label="Previous" ng-click="prevPage()">
-        <span >&laquo;</span>
-      </a>
-    </li>
+  <nav>
+    <ul class="pagination">
+      <li>
+        <a aria-label="Previous" ng-click="prevPage()">
+          <span >&laquo;</span>
+        </a>
+      </li>
 
-    <li ng-repeat="page in pages" ng-hide="{{review}}" ng-class="{active: current_page == (page + 1) }">
-      <a href="#/folder/{{ folder.id }}?page={{page+1}}" >{{page+1}}</a>
-    </li>
-    <li ng-repeat="page in pages" ng-show="{{review}}" ng-class="{active: current_page == (page + 1) }">
-      <a href="#/folder_review/{{ folder.id }}?page={{page+1}}" >{{page+1}}</a>
-    </li>
+      <li ng-repeat="page in pages" ng-hide="{{review}}" ng-class="{active: current_page == (page + 1) }">
+        <a href="#/folder/{{ folder.id }}?page={{page+1}}" >{{page+1}}</a>
+      </li>
+      <li ng-repeat="page in pages" ng-show="{{review}}" ng-class="{active: current_page == (page + 1) }">
+        <a href="#/folder_review/{{ folder.id }}?page={{page+1}}" >{{page+1}}</a>
+      </li>
 
-    <li>
-      <a aria-label="Next" ng-click="nextPage()">
-        <span >&raquo;</span>
-      </a>
-    </li>
-  </ul>
-</nav>
+      <li>
+        <a aria-label="Next" ng-click="nextPage()">
+          <span >&raquo;</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
 </div>

@@ -7,6 +7,8 @@ class User
   field :token, type: String
   field :admin, type: Boolean, default: false
 
+  has_many :audio_folders
+
   include BCrypt
   field :password_hash, type: String
   def password
@@ -35,7 +37,8 @@ class User
         translated:  AudioFile.where( translator: self, status: "translated" ).count,
         reviewed:  AudioFile.where( translator: self, status: "reviewed" ).count,
         total_time: Time.at(AudioFile.where( translator: self).sum(:duration)).gmtime.strftime('%R:%S')
-      }
+      },
+      folders: audio_folders.count()
     }
   end
 

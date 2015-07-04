@@ -1,6 +1,4 @@
 'use strict';
-
-
 // Declare app level module which depends on views, and components
 var Translator = angular.module('Translator', [
   'ngRoute',
@@ -57,20 +55,30 @@ var Translator = angular.module('Translator', [
   };
   return msgBus;
 })
-.controller('AppController', ['$scope', 'User', 'Restangular', function($scope, User,Restangular) {
+
+.controller('AppController', ['$scope', '$location', 'User', 'Restangular', function($scope, $location, User,Restangular) {
   $scope.user = false;
+
+  $scope.isHome = function() {
+    return $location.path() == '/home';
+  };
 
   User.login.get().then(function(user) {
     if (user!="null") {
       $scope.user = user;
     };
   });
-  var audio_folders = Restangular.all("audio_folders");
-  audio_folders.getList().then(function(folders) {
-    $scope.folders = folders;
+
+  Restangular.all("audio_folders").getList().then(function(folders) {
+    $scope.folders = _.sortBy(folders,function(folder) {
+      return ( folder.responsable ) ? folder.responsable.id : folder.responsable;
+    });
   });
+
 }])
-.controller('MenuController', ['$scope', 'Restangular', 'User', '$location', 'Satellite', function($scope, Restangular, User, $location, Satellite) {
+
+.controller('MenuController', ['$scope', '$route', 'Restangular', 'User', '$location', 'Satellite',
+  function($scope, $route, Restangular, User, $location, Satellite) {
   $scope.user = false;
 
   User.login.get().then(function(user) {
@@ -84,6 +92,7 @@ var Translator = angular.module('Translator', [
     User.login.post("logout").then(function() {
       $scope.user = false;
       $location.path("/");
+      $route.reload();
     })
     return false;
   };
@@ -99,6 +108,34 @@ var Translator = angular.module('Translator', [
 }])
 
 .controller('HomeController', ['$scope', 'Restangular', function($scope, Restangular) {
+  $scope.taking = false;
+
+  $scope.take = function(folder) {
+    $scope.taking = true;
+    Restangular.one("audio_folders", folder.id).put({}).then(function(newFolders) {
+        $scope.$parent.folders = _.sortBy(newFolders,function(folder) {
+        return ( folder.responsable ) ? folder.responsable.id : folder.responsable;
+      });
+      $scope.taking = false;
+    });
+  };
+  $scope.notResponsable = function(folder) {
+    return !folder.hasResponsable && !$scope.taking;
+  }
+  $scope.folderReady = function(folder) {
+    return folder.status == 'ready';
+  };
+
+  $scope.folderIsMine = function(folder) {
+    if ( $scope.$parent.user.admin ) {
+      return true;
+    }
+    if ( _.isNull(folder.responsable) ) {
+      return true;
+    }
+    return $scope.$parent.user.id == folder.responsable.id ;
+  }
+
 }])
 .controller('UsersController', ['$scope', 'Restangular', function($scope, Restangular) {
   var users = Restangular.all("users")
@@ -106,7 +143,8 @@ var Translator = angular.module('Translator', [
     $scope.users = users;
   });
 }])
-.controller('LoginController', ['$scope', 'Restangular', 'User', '$location', 'Satellite', function($scope, Restangular, User, $location, Satellite) {
+.controller('LoginController', ['$scope', 'Restangular', 'User', '$location', '$route', 'Satellite',
+  function($scope, Restangular, User, $location, $route, Satellite) {
   $scope.login = {
     email: "",
     password: ""
@@ -116,6 +154,7 @@ var Translator = angular.module('Translator', [
       if ( ! _.isUndefined( data.email ) ) {
         Satellite.transmit("user_loggin")
         $location.path("/home");
+        $route.reload();
       };
     });
     return false;
@@ -132,7 +171,7 @@ var Translator = angular.module('Translator', [
     var page = parseInt(params.page);
   }
   $scope.current_page = page;
-  console.log($scope.current_page);
+
   audio_folder.get( {page: page }).then(function(folder) {
     $scope.folder = folder;
     $scope.pages = _.range(folder.pages);

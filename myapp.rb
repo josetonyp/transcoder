@@ -11,8 +11,8 @@ require 'will_paginate_mongoid'
 require 'bcrypt'
 require 'waveinfo'
 require 'awesome_print'
-require_relative 'models/user'
-require_relative 'models/audio'
+Dir["models/*.rb"].each {|file| require_relative file }
+
 
 APPROOT = File.expand_path(File.dirname(__FILE__))
 
@@ -67,24 +67,11 @@ put '/audio_files/:file' do
     if params['review'] == "true"
       audio.update_attributes!( status: "reviewed", reviewer: @user )
     else
-      audio.update_attributes!( translation: params["value"].strip, status: "translated", translator: @user ) if params["value"] != "" && params["value"] != "[bad wave] ??"
+      audio.translate( params, @user)
     end
     audio.reload.to_json
   end
 end
-
-
-# AudioFolders
-
-# get '/audio_folders/import' do
-#   content_type :json
-#   if @user && @user.admin
-#     AudioFile.destroy_all
-#     AudioFolder.destroy_all
-#     AudioFolder.import
-#     AudioFolder.all.map(&:status).to_json
-#   end
-# end
 
 get '/audio_folders' do
   content_type :json
@@ -100,6 +87,14 @@ get '/audio_folders/:id' do
   if @user
     page = params["page"].nil? ? 1 : params["page"].to_i
     AudioFolder.find(params[:id]).prep_json( page, review: false ).to_json
+  end
+end
+
+put '/audio_folders/:id' do
+  content_type :json
+  if @user
+    AudioFolder.find(params[:id]).take_by(@user)
+    AudioFolder.all.map(&:status).to_json
   end
 end
 
