@@ -30,7 +30,7 @@ class AudioFile
       translation: translation,
       status: status,
       translator: translator,
-      public_file: file.gsub('/public', ''),
+      public_file: file.gsub('/public', '').gsub('//','/'),
       duration: Time.at(duration).gmtime.strftime('%R:%S'),
       audio_folder: audio_folder.id
     }.merge!(options)

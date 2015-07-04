@@ -7,7 +7,9 @@ class User
   field :token, type: String
   field :admin, type: Boolean, default: false
 
-  has_many :audio_folders
+  def audio_folders
+     AudioFolder.where( translator: self )
+  end
 
   include BCrypt
   field :password_hash, type: String
@@ -26,6 +28,13 @@ class User
     return nil
   end
 
+  def payroll
+    return 0 if AudioFile.where( translator: self, status: "translated" ).count() == 0
+    min = admin? ? 58 : 35
+    time = AudioFile.where( translator: self, status: "translated" ).sum(:duration)
+    Time.at(time).gmtime.strftime('%M').to_f * (min.to_f / 60.0) + min.to_f * Time.at(time).gmtime.strftime('%H').to_f
+  end
+
   def prep_json
     {
       id: id.to_s,
@@ -38,7 +47,8 @@ class User
         reviewed:  AudioFile.where( translator: self, status: "reviewed" ).count,
         total_time: Time.at(AudioFile.where( translator: self).sum(:duration)).gmtime.strftime('%R:%S')
       },
-      folders: audio_folders.count()
+      folders: audio_folders.count(),
+      payrol: ""
     }
   end
 
