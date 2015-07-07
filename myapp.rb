@@ -92,8 +92,9 @@ end
 
 put '/audio_folders/:id' do
   content_type :json
+  folder = AudioFolder.find(params[:id])
   if @user
-    AudioFolder.find(params[:id]).take_by(@user)
+    folder.take_by(@user) unless folder.translator
     AudioFolder.all.map(&:status).to_json
   end
 end
