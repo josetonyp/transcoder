@@ -73,4 +73,8 @@ class AudioFile
     update_attributes!( translation: params["value"].strip, status: "translated", translator: user ) if params["value"] != "" && params["value"] != "[bad wave] ??"
   end
 
+  def self.total_duration
+    sum(:duration)
+  end
+
 end
