@@ -189,6 +189,7 @@ var Translator = angular.module('Translator', [
   Satellite.listen("next_page", $scope, function() {
     $scope.nextPage();
   });
+
 }])
 
 
@@ -218,7 +219,8 @@ var Translator = angular.module('Translator', [
               case 9: // i
                 return "\\i:";
               case 18: // r
-                return "<intruder> </intruder>";
+                audio[0].play();
+                return "";
               case 23: // w
                 return "[bad wave]";
               case 44: // , comma
