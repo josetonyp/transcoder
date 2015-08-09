@@ -29,7 +29,7 @@ class User
   end
 
   def payroll
-    return 0 if AudioFile.where( translator: self, status: "translated" ).count() == 0
+    return 0 if AudioFile.where( translator: self).count() == 0
     min = admin? ? 58 : 35
     time = AudioFile.where( translator: self, status: "translated" ).sum(:duration)
     Time.at(time).gmtime.strftime('%M').to_f * (min.to_f / 60.0) + min.to_f * Time.at(time).gmtime.strftime('%H').to_f

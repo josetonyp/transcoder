@@ -38,10 +38,30 @@ var Translator = angular.module('Translator', [
   var token = "";
   return {
     login: Restangular.one("account"),
-    users: Restangular.all("users")
+    all: Restangular.all("users")
   };
 }])
-
+.service('Folders', ['Restangular', function(Restangular) {
+  var filterToUser = _.curry(function(user, folders) {
+    return _(folders).filter(function(folder) {
+      return user.admin || ( !_.isNull(folder.responsable) && folder.responsable.id == user.id );
+    }).value();
+  });
+  return {
+    list: function(user, options) {
+      if (_.isUndefined(options)) {
+        options = {};
+      }
+      return Restangular.all("audio_folders").getList(options).then(filterToUser(user));
+    },
+    take: function(admin, folder, user_id) {
+      return Restangular.one("audio_folders", folder.id).put({user_id: user_id}).then(filterToUser(admin));
+    },
+    get: function(folder_id, options) {
+      return Restangular.one("audio_folders", folder_id).get(options);
+    }
+  };
+}])
 .factory('Satellite', function($rootScope) {
   var msgBus;
   msgBus = {};
@@ -56,7 +76,7 @@ var Translator = angular.module('Translator', [
   return msgBus;
 })
 
-.controller('AppController', ['$scope', '$location', 'User', 'Restangular', function($scope, $location, User,Restangular) {
+.controller('AppController', ['$scope', '$location', 'User', 'Satellite', 'Folders', function($scope, $location, User, Satellite, Folders) {
   $scope.user = false;
 
   $scope.isHome = function() {
@@ -66,27 +86,26 @@ var Translator = angular.module('Translator', [
   User.login.get().then(function(user) {
     if (user!="null") {
       $scope.user = user;
-    };
+      Satellite.transmit("user.available", user);
+    }
   });
 
-  Restangular.all("audio_folders").getList().then(function(folders) {
-    $scope.folders = folders;
-    // _.sortBy(folders,function(folder) {
-    //   return ( folder.responsable ) ? folder.responsable.id : folder.responsable;
-    // });
+  Satellite.listen('user.available', $scope, function(event, user) {
+    Folders.list(user).then(function(folders) {
+      $scope.folders_count = folders.length;
+    });
   });
-
 }])
 
 .controller('MenuController', ['$scope', '$route', 'Restangular', 'User', '$location', 'Satellite',
   function($scope, $route, Restangular, User, $location, Satellite) {
   $scope.user = false;
 
-  User.login.get().then(function(user) {
+  Satellite.listen('user.available', $scope, function(event, user) {
     if (user!="null") {
       $scope.user = user;
-    };
-  })
+    }
+  });
 
   $scope.signout = function() {
     event.preventDefault();
@@ -94,36 +113,49 @@ var Translator = angular.module('Translator', [
       $scope.user = false;
       $location.path("/");
       $route.reload();
-    })
+    });
     return false;
   };
 
-  Satellite.listen("user_loggin", $scope, function() {
-    User.login.get().then(function(user) {
-      if (user!="null") {
-        $scope.user = user;
-      };
-    })
-  });
-
 }])
 
-.controller('HomeController', ['$scope', 'Restangular', function($scope, Restangular) {
+.controller('HomeController', ['$scope', 'Folders', 'User', 'Satellite', function($scope, Folders, User, Satellite) {
   $scope.taking = false;
+  $scope.values = {selectedUser:  ""};
 
-  $scope.take = function(folder) {
+  User.all.getList({short: 1}).then(function(users) {
+    $scope.select_users = users;
+  });
+
+  var findFolders = function() {
+    Folders.list($scope.$parent.user).then(function(folders) {
+      $scope.folders = folders;
+    });
+  };
+
+  if ($scope.$parent.user) {
+      findFolders();
+  } else {
+    Satellite.listen('user.available', $scope, function(event, user) {
+      findFolders();
+    });
+  }
+
+  $scope.selectUser = function(folder) {
+    $scope.take(folder, $scope.values.selectedUser);
+  };
+
+  $scope.take = function(folder, user_id) {
     $scope.taking = true;
-    Restangular.one("audio_folders", folder.id).put({}).then(function(newFolders) {
-        $scope.$parent.folders = newFolders
-        // _.sortBy(newFolders,function(folder) {
-        //   return ( folder.responsable ) ? folder.responsable.id : folder.responsable;
-        // });
+    Folders.take($scope.$parent.user, folder, user_id).then(function(folders) {
+      $scope.folders = folders;
       $scope.taking = false;
     });
   };
   $scope.notResponsable = function(folder) {
-    return !folder.hasResponsable && !$scope.taking;
+    return $scope.$parent.user.admin && !folder.hasResponsable && !$scope.taking;
   }
+
   $scope.folderReady = function(folder) {
     return folder.status == 'ready';
   };
@@ -132,7 +164,7 @@ var Translator = angular.module('Translator', [
     if ( $scope.$parent.user.admin ) {
       return true;
     }
-    if ( _.isNull(folder.responsable) ) {
+    if (_.isUndefined(folder.responsable)) {
       return true;
     }
     return $scope.$parent.user.id == folder.responsable.id ;
@@ -140,7 +172,7 @@ var Translator = angular.module('Translator', [
 
 }])
 .controller('UsersController', ['$scope', 'Restangular', function($scope, Restangular) {
-  var users = Restangular.all("users")
+  var users = Restangular.all("users");
   users.getList().then(function(users) {
     $scope.users = users;
   });
@@ -152,32 +184,45 @@ var Translator = angular.module('Translator', [
     password: ""
   };
   $scope.loginSubmit= function(event) {
-    User.login.post("login",$scope.login).then(function(data) {
-      if ( ! _.isUndefined( data.email ) ) {
-        Satellite.transmit("user_loggin")
+    User.login.post("login",$scope.login).then(function(user) {
+      if (! _.isUndefined(user.email)) {
+        Satellite.transmit("user.available", user);
         $location.path("/home");
         $route.reload();
-      };
+      }
     });
     return false;
   };
 }])
 
-.controller('AudiosController', ['$scope', '$location', 'Restangular', '$routeParams','Satellite', '$route', function($scope,$location, Restangular, params, Satellite, $route)  {
+.controller('AudiosController', ['$scope', '$location', 'Folders', '$routeParams','Satellite', '$route',
+  function($scope,$location, Folders, params, Satellite, $route)  {
+  var findAudios = function() {
+    Folders.get(params.id, {page: page }).then(function(folder) {
+      if ( !$scope.$parent.user.admin && (_.isNull(folder.responsable) || folder.responsable.id != $scope.$parent.user.id) ){
+        $location.path('/home');
+      }
+      $scope.folder = folder;
+      $scope.pages = _.range(folder.pages);
+    });
+  }
   $scope.review = $route.current.data.review;
 
-  var audio_folder = Restangular.one("audio_folders", params.id);
   if( _.isUndefined( params.page ) ){
-    var page = 1
+    var page = 1;
   }else{
     var page = parseInt(params.page);
   }
   $scope.current_page = page;
 
-  audio_folder.get( {page: page }).then(function(folder) {
-    $scope.folder = folder;
-    $scope.pages = _.range(folder.pages);
-  });
+  if ($scope.$parent.user) {
+    findAudios();
+  } else {
+    Satellite.listen('user.available', $scope, function(event, user) {
+      findAudios();
+    });
+  }
+
   $scope.nextPage = function(){
     if (page < $scope.folder.pages)
       $location.search( "page", page + 1 );
@@ -186,10 +231,10 @@ var Translator = angular.module('Translator', [
     if (page > 1)
       $location.search( "page", page - 1 );
   };
+
   Satellite.listen("next_page", $scope, function() {
     $scope.nextPage();
   });
-
 }])
 
 

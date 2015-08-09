@@ -11,6 +11,9 @@ require 'will_paginate_mongoid'
 require 'bcrypt'
 require 'waveinfo'
 require 'awesome_print'
+require 'pry'
+require 'pry-doc'
+
 Dir["models/*.rb"].each {|file| require_relative file }
 
 
@@ -21,7 +24,7 @@ configure :development do
   set :session_secret, "asdfasfd asfda sfd asfd asfda"
   logger = Logger.new($stdout)
 
-  Mongoid.load!("config/mongoid.yml")
+  Mongoid.load!("./config/mongoid.yml")
 end
 
 get '/' do
@@ -76,9 +79,11 @@ end
 get '/audio_folders' do
   content_type :json
   if @user
-    page = params["page"].nil? ? 1 : params["page"].to_i
-    AudioFile.paginate( page: page, per_page: 30 ).map(&:prep_json).to_json
-    AudioFolder.all.map(&:status).to_json
+    if params[:count].to_s == 1.to_s
+      [AudioFolder.count].to_json
+    else
+      AudioFolder.all.map(&:status).to_json
+    end
   end
 end
 
@@ -93,6 +98,7 @@ end
 put '/audio_folders/:id' do
   content_type :json
   folder = AudioFolder.find(params[:id])
+  @user= User.find(params[:user_id])
   if @user
     folder.take_by(@user) unless folder.translator
     AudioFolder.all.map(&:status).to_json
@@ -110,7 +116,11 @@ end
 
 get '/users' do
   if @user and @user.admin
-    User.all.map(&:prep_json).to_json
+    if params.include?("short") && params["short"].to_s == 1.to_s
+      User.all.map(&:min_json)
+    else
+      User.all.map(&:prep_json)
+    end.to_json
   end
 end
 

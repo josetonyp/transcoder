@@ -80,6 +80,14 @@ class AudioFolder
     payroll_total - User.all.map(&:payroll).inject(:+)
   end
 
+  def duration_miliseconds
+    duration.to_i
+  end
+
+  def self.by_user
+    User.all.map{|u| [ u.name, u.audio_folders.map(&:duration_miliseconds).inject(:+)] }
+  end
+
   def human_duration
     duration.gmtime.strftime('%R:%S')
   end

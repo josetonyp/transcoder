@@ -30,7 +30,9 @@
           </td>
           <td>
             <span ng-show="notResponsable(folder)">
-              <a class="btn btn-info" ng-click="take(folder)" class="btn btn-default">Take</a>
+              <select id="translator_user" ng-change="selectUser(folder)" ng-model="values.selectedUser">
+                <option ng-repeat="user in select_users" value="{{user.id}}">{{user.name}}</option>
+              </select>
             </span>
             <span ng-show="folderIsMine(folder) && folder.hasResponsable">
               <a class="btn btn-primary" href="#/folder/{{ folder.id }}" class="btn">Edit</a>
