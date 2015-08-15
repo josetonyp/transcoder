@@ -251,29 +251,29 @@ var Translator = angular.module('Translator', [
         if (event.ctrlKey && (event.which != 63234 || event.which != 63235) ){
           var text = (function() {
             switch (event.which) {
-              case 12: //f
-                return " [f]";
-              case 13: //m
-                return " [m]";
+              // case 12: //f
+              //   return " [f]";
+              // case 13: //m
+              //   return " [m]";
               case 3: //c
                 return "\\contact ";
               case 10: // j
-                return "\\mp: ";
+                return "\\pf";
               case 21: //u
-                return "\\noise:unintelligeble ";
-              case 9: // i
-                return "\\i:";
+                return "\\u ";
+              // case 9: // i
+              //   return "\\i:";
               case 18: // r
                 audio[0].play();
                 return "";
               case 23: // w
-                return "[bad wave]";
-              case 44: // , comma
-                return "\\comma\\";
-              case 46: // . period
-                return "\\period\\";
+                return "[BAD]";
+              // case 44: // , comma
+              //   return "\\comma\\";
+              // case 46: // . period
+              //   return "\\period\\";
               case 7: // g
-                return "\\noise:bgspeech";
+                return "[BG]";
               default:
                 return "";
             }
