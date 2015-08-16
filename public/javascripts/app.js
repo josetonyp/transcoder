@@ -256,11 +256,11 @@ var Translator = angular.module('Translator', [
               // case 13: //m
               //   return " [m]";
               case 3: //c
-                return "\\contact ";
+                return "\\contact";
               case 10: // j
-                return "\\pf";
+                return "\\pf:";
               case 21: //u
-                return "\\u ";
+                return "\\u";
               // case 9: // i
               //   return "\\i:";
               case 18: // r
