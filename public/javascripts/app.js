@@ -257,6 +257,8 @@ var Translator = angular.module('Translator', [
               //   return " [m]";
               case 3: //c
                 return "\\contact";
+              case 67: //c
+                return "\\contact";
               case 10: // j
                 return "\\pf:";
               case 21: //u
