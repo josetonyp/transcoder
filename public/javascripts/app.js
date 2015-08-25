@@ -257,24 +257,37 @@ var Translator = angular.module('Translator', [
               //   return " [m]";
               case 3: //c
                 return "\\contact";
-              case 67: //c
+              case 99: //c
                 return "\\contact";
+
               case 10: // j
                 return "\\pf:";
+              case 106: // j
+                return "\\pf:";
+
               case 21: //u
+                return "\\u";
+              case 117: //u
                 return "\\u";
               // case 9: // i
               //   return "\\i:";
               case 18: // r
                 audio[0].play();
                 return "";
+              case 114: // r
+                audio[0].play();
+                return "";
               case 23: // w
+                return "[BAD]";
+              case 119: // w
                 return "[BAD]";
               // case 44: // , comma
               //   return "\\comma\\";
               // case 46: // . period
               //   return "\\period\\";
               case 7: // g
+                return "[BG]";
+              case 103: // g
                 return "[BG]";
               default:
                 return "";
