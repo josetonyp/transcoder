@@ -131,11 +131,12 @@ class AudioFolder
     files = AudioFile.where( audio_folder: id )
     total = files.count
     translations = files.only(:translation).where( :translation.ne => "").count
+
     {
       id: id.to_s,
       name: name,
       name_short: name_short,
-      completed: ((translations*100)/total).to_i,
+      completed: (total > 0) ? ((translations*100)/total).to_i : total,
       audios: total,
       status: files.only(:status).where( :status.ne => "new").count ==  total ? "ready" : "on_process",
       reviewed: files.only(:status).where( status: "reviewed").count,
