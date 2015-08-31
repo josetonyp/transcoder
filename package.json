@@ -1,0 +1,12 @@
+{
+  "name": "Transcoder",
+  "version": "0.1.0",
+  "description": "Covert sound into text manually",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/josetonyp/transcoder"
+  },
+  "devDependencies": {
+    "gulp": "^3.9.0"
+  }
+}

@@ -9,3 +9,7 @@ public/files.zip
 folders/
 .bundle
 upload
+traductor.sublime*
+backup
+node_modules
+tmp
