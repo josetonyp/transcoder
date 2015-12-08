@@ -9,3 +9,7 @@
   padding: 15px;
   margin: 0 auto;
 }
+
+.error .bg-warning{
+  padding: 15px;
+}

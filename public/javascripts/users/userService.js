@@ -2,7 +2,7 @@ window.Translator
   .service('User', ['Restangular', function(Restangular) {
     var token = "";
     return {
-      login: Restangular.one("account"),
-      all: Restangular.all("users")
+      login: Restangular.one("api/account"),
+      all: Restangular.all("api/users")
     };
   }]);

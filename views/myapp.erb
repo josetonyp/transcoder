@@ -6,7 +6,7 @@
 <html>
   <head>
     <title>My Fast Transcriber</title>
-
+    <base href="/">
 
     <link rel="stylesheet" href="/javascripts/bower_components/bootstrap/dist/css/bootstrap-theme.min.css">
     <link rel="stylesheet" href="/javascripts/bower_components/bootstrap/dist/css/bootstrap.min.css">
@@ -19,8 +19,8 @@
     <div class="navbar navbar-inverse navbar-fixed-top" role="navigation" ng-controller="MenuController">
       <div class="container-fluid">
         <div class="navbar-header" >
-          <a class="navbar-brand" ng-show="user" href="#/home">Folders ({{folders_count}})</a>
-          <a class="navbar-brand" ng-show="user.admin" href="#/users">Users</a>
+          <a class="navbar-brand" ng-show="user" ui-sref="home">Folders ({{folders_count}})</a>
+          <a class="navbar-brand" ng-show="user.admin" ui-sref="users">Users</a>
         </div>
         <div class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
@@ -35,7 +35,7 @@
     <br/>
     <br/>
     <div class="container">
-      <div ng-view></div>
+      <div ui-view></div>
     </div>
 
 
@@ -45,19 +45,22 @@
     <script src="/javascripts/bower_components/angular-route/angular-route.js"></script>
     <script src="/javascripts/bower_components/lodash/lodash.js"></script>
     <script src="/javascripts/bower_components/restangular/dist/restangular.min.js"></script>
+    <script src="/javascripts/bower_components/angular-ui-router/release/angular-ui-router.js"></script>
     <script src="/javascripts/init.js"></script>
 
-    <script src="/javascripts/audio/audioItemDirective.js"></script>
-    <script src="/javascripts/audio/audiosController.js"></script>
+    <script src="/javascripts/audios/audioItemDirective.js"></script>
+    <script src="/javascripts/audios/audiosController.js"></script>
+    <script src="/javascripts/audios/audiosAutoFocus.js"></script>
 
     <script src="/javascripts/common/appController.js"></script>
     <script src="/javascripts/common/loginController.js"></script>
     <script src="/javascripts/common/menuController.js"></script>
     <script src="/javascripts/common/satellite.js"></script>
 
-    <script src="/javascripts/folders/folderController.js"></script>
+    <script src="/javascripts/folders/foldersController.js"></script>
+    <script src="/javascripts/folders/foldersService.js"></script>
 
-    <script src="/javascripts/users/userController.js"></script>
+    <script src="/javascripts/users/usersController.js"></script>
     <script src="/javascripts/users/userService.js"></script>
 
     <script src="/javascripts/app.js"></script>

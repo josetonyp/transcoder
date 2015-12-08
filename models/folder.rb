@@ -21,12 +21,19 @@ class AudioFolder
       threads << Thread.new {
         Importer.new(file).import.tap do |imported|
 
-          factory(imported.sanitized_name).tap do |folder|
-            imported.wavs.each do |wfile|
-              file = folder.digest_wav(wfile)
-              AudioFile.upfind( Sanitize::base(file), folder )
-                .waveme( file )
-                .txtme( File.read("#{wfile}.txt").strip )
+          factory(imported.sanitized_name, imported.wavs.empty?).tap do |folder|
+            if imported.wavs.empty?
+              imported.txts.each do |tfile|
+                AudioFile.upfind( Sanitize::base( tfile.first.gsub(/.txt$/, '') ), folder )
+                  .txtme( File.read(tfile).strip )
+              end
+            else
+              imported.wavs.each do |wfile|
+                file = folder.digest_wav(wfile)
+                AudioFile.upfind( Sanitize::base(file), folder )
+                  .waveme( file )
+                  .txtme( File.read("#{wfile}.txt").strip )
+              end
             end
             folder.get_duration
           end
@@ -41,14 +48,16 @@ class AudioFolder
     name.gsub(/^.*?vices\./, "").split(".").join("-")
   end
 
-  def self.factory( name )
+  def self.factory( name, only_text = false )
     folder = unless where( name: name).exists?
         create( name: name )
      else
         where(name: name).first
      end
-    FileUtils.rm_rf(folder.audio_wav_folder)
-    FileUtils.mkdir_p(folder.audio_wav_folder)
+    unless only_text
+      FileUtils.rm_rf(folder.audio_wav_folder)
+      FileUtils.mkdir_p(folder.audio_wav_folder)
+    end
     folder
   end
 

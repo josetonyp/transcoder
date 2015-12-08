@@ -1,6 +1,6 @@
 window.Translator
-  .controller('MenuController', ['$scope', '$route', 'Restangular', 'User', '$location', 'Satellite',
-    function($scope, $route, Restangular, User, $location, Satellite) {
+  .controller('MenuController', ['$scope', '$route', 'Restangular', 'User', '$state', 'Satellite',
+    function($scope, $route, Restangular, User, $state, Satellite) {
     $scope.user = false;
 
     Satellite.listen('user.available', $scope, function(event, user) {
@@ -13,7 +13,7 @@ window.Translator
       event.preventDefault();
       User.login.post("logout").then(function() {
         $scope.user = false;
-        $location.path("/");
+        $state.go("login");
         $route.reload();
       });
       return false;

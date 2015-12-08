@@ -64,7 +64,7 @@ window.Translator
         });
 
         area.on("focusout", function(event) {
-          var audio_file = Restangular.one("audio_files", element.attr("id"));
+          var audio_file = Restangular.one("api/audio_files", element.attr("id"));
 
           var  total_audios = $("textarea", element.parents(".all_audios")).length ;
           audio_file.put( {value: area.val()} ).then(function(audio) {
