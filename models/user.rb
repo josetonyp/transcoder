@@ -36,6 +36,7 @@ class User
   end
 
   def prep_json
+    folders =
     {
       id: id.to_s,
       name: name,
@@ -43,7 +44,7 @@ class User
       email: email,
       token: token,
       audios:{
-        translated:  AudioFile.where( translator: self, status: "translated" ).count,
+        translated:  audio_folders.inject(0){|t,folder| t + folder.audio_files.translated.count },
         reviewed:  AudioFile.where( translator: self, status: "reviewed" ).count,
         total_time: Time.at(AudioFile.where( translator: self).sum(:duration)).gmtime.strftime('%R:%S')
       },

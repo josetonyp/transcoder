@@ -44,7 +44,7 @@ get AllButFiles.new do
   session['m'] = 'Hello World!' # Register user here
   page = params["page"].nil? ? 1 : params["page"].to_i
   audios = AudioFile.paginate( page: page, per_page: 30 )
-  erb :empty, :layout=>:myapp
+  erb :empty
 end
 
 before do
@@ -81,12 +81,8 @@ namespace '/api' do
   put '/audio_files/:file' do
     content_type :json
     if @user
-      audio = AudioFile.find(params["file"])
-      if params['review'] == "true"
-        audio.update_attributes!( status: "reviewed", reviewer: @user )
-      else
-        audio.translate( params, @user)
-      end
+      audio = AudioFile.find(params['file'])
+      audio.translate( translation: params['value'], user: @user, review: params['review'] == "true")
       audio.reload.to_json
     end
   end

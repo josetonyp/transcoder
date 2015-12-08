@@ -16,7 +16,7 @@
             {{ folder.responsable.name }}</td>
           <td class="col-xs-4">
             <div>
-              <a class="btn btn-primary" ng-show="folderIsMine(folder)" style="float:left" href="/folder/{{ folder.id }}" class="btn">{{ folder.name_short }}</a>
+              <a class="btn btn-primary" ng-show="folderIsMine(folder)" style="float:left" ui-sref="folders({id: folder.id})" class="btn">{{ folder.name_short }}</a>
               <span ng-hide="folderIsMine(folder)">{{ folder.id }}</span>
               <span style="float:right">[{{ folder.duration }}]</span>
             </div>
@@ -35,10 +35,10 @@
               </select>
             </span>
             <span ng-show="folderIsMine(folder) && folder.hasResponsable">
-              <a class="btn btn-primary" href="/folder/{{ folder.id }}" class="btn">Edit</a>
+              <a class="btn btn-primary" ui-sref="folders({id: folder.id})" class="btn">Edit</a>
             </span>
-            <span ng-show="user.admin">
-              <a class="btn btn-warning" href="/folder_review/{{ folder.id }}" class="btn">Review</a>
+            <span ng-show="currentUser.admin">
+              <a class="btn btn-warning" ui-sref="folders_review({id: folder.id})" class="btn">Review</a>
               <a class="btn" ng-class="{'btn-default': folder.downloaded, 'btn-success': !folder.downloaded}" ng-show="folderReady(folder)" href="/audio_folders_dowload/{{ folder.id }}" class="btn">Download</a>
             </span>
           </td>

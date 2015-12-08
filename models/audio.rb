@@ -10,6 +10,8 @@ class AudioFile
 
   default_scope ->(){ order_by( id: 'asc') }
 
+  scope :translated, -> { where(:status.ne => 'new')}
+
   field :name, type: String
   field :translation, type: String
   field :status, type: String, default: 'new'
@@ -69,8 +71,14 @@ class AudioFile
     self
   end
 
-  def translate(params, user)
-    update_attributes!( translation: params["value"].strip, status: "translated", translator: user ) if params["value"] != "" && params["value"] != "[bad wave] ??"
+  def translate(translation:, user:, review: false)
+    if review
+      update_attributes!(status: 'reviewed', reviewer: user)
+    else
+      if translation.strip != "" && translation.strip != "[bad wave] ??"
+        update_attributes!( translation: translation.strip, status: 'translated', translator: user )
+      end
+    end
   end
 
   def self.total_duration

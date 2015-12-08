@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html lang="en" ng-app="Translator" class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html lang="en" ng-app="Translator" class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html lang="en" ng-app="Translator" class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html lang="en" ng-app="Translator" class="no-js"> <!--<![endif]-->
+<html>
+  <head>
+    <title>My Fast Transcriber</title>
+    <base href="/">
+
+    <link rel="stylesheet" href="/javascripts/bower_components/bootstrap/dist/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="/javascripts/bower_components/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/app.css">
+
+
+  </head>
+  <body >
+    <div class="container">
+      <div ui-view ng-cloak></div>
+    </div>
+
+    <script src="/javascripts/bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="/javascripts/jquery.textarea.caret.js"></script>
+    <script src="/javascripts/bower_components/angular/angular.js"></script>
+    <script src="/javascripts/bower_components/angular-route/angular-route.js"></script>
+    <script src="/javascripts/bower_components/lodash/lodash.js"></script>
+    <script src="/javascripts/bower_components/restangular/dist/restangular.min.js"></script>
+    <script src="/javascripts/bower_components/angular-ui-router/release/angular-ui-router.js"></script>
+    <script src="/javascripts/init.js"></script>
+
+    <script src="/javascripts/audios/audioItemDirective.js"></script>
+    <script src="/javascripts/audios/audiosController.js"></script>
+    <script src="/javascripts/audios/audiosAutoFocus.js"></script>
+
+    <script src="/javascripts/common/loginController.js"></script>
+    <script src="/javascripts/common/menuController.js"></script>
+    <script src="/javascripts/common/satellite.js"></script>
+
+    <script src="/javascripts/folders/foldersController.js"></script>
+    <script src="/javascripts/folders/foldersService.js"></script>
+
+    <script src="/javascripts/users/usersController.js"></script>
+    <script src="/javascripts/users/userService.js"></script>
+
+    <script src="/javascripts/app.js"></script>
+  </body>
+
+</html>

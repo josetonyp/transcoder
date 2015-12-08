@@ -1,0 +1,21 @@
+<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+  <div class="container-fluid">
+    <div class="navbar-header" >
+      <a class="navbar-brand" ng-show="currentUser" ui-sref-opts="{reload: true}" ui-sref="home()">Folders {{folders_count}}</a>
+      <a class="navbar-brand" ng-show="currentUser.admin" ui-sref-opts="{reload: true}" ui-sref="users()">Users</a>
+    </div>
+    <div class="navbar-collapse collapse">
+      <ul class="nav navbar-nav navbar-right" ng-show="currentUser">
+        <li><a href="#" >{{ currentUser.audios.total_time }} | {{ currentUser.audios.translated }} | {{ currentUser.audios.reviewed }} </a></li>
+        <li><a href="#" >{{ currentUser.name }}</a></li>
+        <li><a href="#" ng-click="signout()">Logout</a></li>
+      </ul>
+    </div><!--/.navbar-collapse -->
+  </div>
+</div>
+<br/>
+<br/>
+<br/>
+<div class="container">
+  <div ui-view ng-cloak></div>
+</div>

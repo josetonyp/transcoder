@@ -1,10 +1,10 @@
 window.Translator
-  .controller('AudiosController', ['$scope', '$state', 'Folders','Satellite', '$route', '$stateParams',
-    function($scope,$state, Folders, Satellite, $route, $stateParams)  {
-
+  .controller('AudiosController', ['$scope', '$state', 'Folders','Satellite', '$stateParams', 'currentUser',
+    function($scope,$state, Folders, Satellite, $stateParams, currentUser)  {
+    $scope.currentUser = currentUser;
     var findAudios = function(page) {
       Folders.get($stateParams.id, {page: page }).then(function(folder) {
-        if ( !$scope.$parent.user.admin && (_.isNull(folder.responsable) || folder.responsable.id != $scope.$parent.user.id) ){
+        if ( !currentUser.admin && (_.isNull(folder.responsable) || folder.responsable.id != currentUser.id) ){
           $state.go('home');
         }
         $scope.folder = folder;
@@ -22,13 +22,7 @@ window.Translator
 
     $scope.current_page = page;
 
-    if ($scope.$parent.user) {
-      findAudios(page);
-    } else {
-      Satellite.listen('user.available', $scope, function(event, user) {
-        findAudios(page);
-      });
-    }
+    findAudios(page);
 
     $scope.nextPage = function(){
       if (page < $scope.folder.pages)
