@@ -1,38 +1,23 @@
 <div class="row">
-
-  <div class="col-xs-12 col-md-9">
-    <div class="row all_audios" autofocus>
-      <div class="col-md-6 audio" style="margin-bottom:3px" ng-repeat="audio in folder.audio_files track by $index">
-        <div class="row audio-item" id="{{ audio.id }}">
-          <audio class="col-xs-2" tabindex="0" controls >
-            <source src="{{ audio.public_file }}" type="audio/wav">
-            Your browser does not support the audio element.
-          </audio>
-          <textarea tabindex="{{ $index + 1}}" rows="1" id="{{ audio.id}}" class="audio-{{ audio.status }}  col-xs-10">{{ audio.translation }}</textarea>
-        </div>
-      </div>
-    </div>
-
-  </div>
-  <div class="col-xs-12 col-md-3">
-    <div class="label label-default col-xs-12" style="font-size:1em;">{{ folder.name_short }}</div>
+  <div class="col-xs-12 col-md-3 pull-right">
+    <div class="label label-default col-xs-12" style="font-size:1em;">{{ folderInfo.name_short }}</div>
     <br/>
 
     <div class="label label-default col-xs-12">
       <div class="progress">
-        <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="{{ folder.translated }}" aria-valuemin="0" aria-valuemax="{{ folder.audios }}" style="width: {{ folder.completed }}%">
-          {{ folder.completed }}%
+        <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="{{ folderInfo.translated }}" aria-valuemin="0" aria-valuemax="{{ folderInfo.audios }}" style="width: {{ folderInfo.completed }}%">
+          {{ folderInfo.completed }}%
         </div>
       </div>
     </div>
     <br/>
-    <div class="label label-default col-xs-12">{{ folder.responsable.name }}</div>
+    <div class="label label-default col-xs-12">{{ folderInfo.responsable.name }}</div>
     <br/>
     <div class="label label-primary col-xs-12">{{ current_page }}</div>
     <br/>
-    <div class="label label-default col-xs-4">{{ folder.news }}</div>
-    <div class="label label-success col-xs-4">{{ folder.translated }}</div>
-    <div class="label label-info col-xs-4">{{ folder.reviewed }}</div>
+    <div class="label label-default col-xs-4">{{ folderInfo.news }}</div>
+    <div class="label label-success col-xs-4">{{ folderInfo.translated }}</div>
+    <div class="label label-info col-xs-4">{{ folderInfo.reviewed }}</div>
     <br/>
     <br/>
 
@@ -50,6 +35,21 @@
       <div><em>ctrl+.</em> : <span style="color:#aaa">\period\</span></div> -->
       <div><em>ctrl+r</em> : <span style="color:#aaa">Re Play Audio</span></div>
     </p>
+  </div>
+
+  <div class="col-xs-12 col-md-9 pull-left">
+    <div class="row all_audios" autofocus>
+      <div class="col-md-6 audio" style="margin-bottom:3px" ng-repeat="audio in folder.audio_files track by $index">
+        <div class="row audio-item" id="{{ audio.id }}">
+          <audio class="col-xs-2" tabindex="0" controls >
+            <source src="{{ audio.public_file }}" type="audio/wav">
+            Your browser does not support the audio element.
+          </audio>
+          <textarea tabindex="{{ $index + 1}}" rows="1" id="{{ audio.id}}" class="audio-{{ audio.status }}  col-xs-10">{{ audio.translation }}</textarea>
+        </div>
+      </div>
+    </div>
+
   </div>
 
 

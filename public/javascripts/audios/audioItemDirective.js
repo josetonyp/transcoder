@@ -69,8 +69,10 @@ window.Translator
           var  total_audios = $("textarea", element.parents(".all_audios")).length ;
           audio_file.put( {value: area.val()} ).then(function(audio) {
             scope.audio = audio;
+            Satellite.transmit('audio.updated', audio);
             if(scope.review){
               audio_file.put({ review: true }).then(function(audio) { scope.audio = audio; });
+              Satellite.transmit('audio.reviewed', audio);
             }
             if (area.attr("tabindex") == total_audios &&  audio.status != "new"){
               Satellite.transmit("next_page");

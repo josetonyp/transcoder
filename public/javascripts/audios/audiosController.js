@@ -2,12 +2,14 @@ window.Translator
   .controller('AudiosController', ['$scope', '$state', 'Folders','Satellite', '$stateParams', 'currentUser',
     function($scope,$state, Folders, Satellite, $stateParams, currentUser)  {
     $scope.currentUser = currentUser;
+
     var findAudios = function(page) {
       Folders.get($stateParams.id, {page: page }).then(function(folder) {
         if ( !currentUser.admin && (_.isNull(folder.responsable) || folder.responsable.id != currentUser.id) ){
           $state.go('home');
         }
         $scope.folder = folder;
+        $scope.folderInfo = folder;
         $scope.pages = _.range(folder.pages);
       });
     };
@@ -36,4 +38,18 @@ window.Translator
     Satellite.listen("next_page", $scope, function() {
       $scope.nextPage();
     });
+
+
+
+
+    var reloadFolderInfo = function() {
+      Folders.get($stateParams.id, {page: page }).then(function(folder) {
+        console.log(folder);
+        $scope.folderInfo = folder;
+      });
+    }
+
+    Satellite.listen('audio.updated', $scope, reloadFolderInfo);
+    Satellite.listen('audio.reviewed', $scope, reloadFolderInfo);
+
   }]);

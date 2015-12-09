@@ -16,7 +16,6 @@ window.Translator
         resolve: {
           currentUser: function(User, $state, Satellite) {
             return User.login.get().then(function(user) {
-              Satellite.transmit("user.available", user);
               return user
             }, function(error) {
               if (error.status == 404){

@@ -10,7 +10,6 @@ window.Translator
       $scope.error = "";
       User.login.post("login",$scope.login).then(function(user) {
         if (! _.isUndefined(user.email)) {
-          Satellite.transmit("user.available", user);
           $state.go("home", {reload: true});
         }
       }, function(error) {
