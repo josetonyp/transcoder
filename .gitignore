@@ -7,7 +7,7 @@ public/audio/*
 public/bower_components
 public/files.zip
 public/output
-folders/
+/folders/
 .bundle
 upload
 traductor.sublime*
