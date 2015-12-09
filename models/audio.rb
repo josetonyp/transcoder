@@ -11,6 +11,7 @@ class AudioFile
   default_scope ->(){ order_by( id: 'asc') }
 
   scope :translated, -> { where(:status.ne => 'new')}
+  scope :reviewed, -> { where(status: 'reviewed')}
 
   field :name, type: String
   field :translation, type: String

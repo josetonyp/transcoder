@@ -4,6 +4,8 @@ class AudioFolder
 
   default_scope ->(){ order_by( id: 'asc') }
 
+  scope :for_user, ->(user){ where(translator: user) }
+
   INFOLDER = "folders"
   OUTFOLDER = 'public/audio'
   OUTTXTFOLDER = 'public/output'

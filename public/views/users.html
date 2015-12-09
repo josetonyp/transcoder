@@ -4,26 +4,27 @@
     <table class="table table-bordered table-striped table-hover">
       <thead>
         <tr>
-          <th>#</th>
-          <th>Name</th>
-          <th>Translated</th>
-          <th>Reviewed</th>
-          <th>Folders</th>
-          <th>Total Time</th>
-          <th>Payrol</th>
           <th></th>
+          <th>Name</th>
+          <th>Folders</th>
+          <th>Translated</th>
+          <th>Total</th>
         </tr>
       </thead>
       <tbody>
         <tr ng-repeat="user in users track by $index">
-          <th>{{ $index }}</th>
+          <th>
+            <div class="progress">
+              <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="{{ user.audios.translated }}" aria-valuemin="0" aria-valuemax="{{ user.audios.total }}" style="width: {{ user.audios.completed }}%">
+                {{ user.audios.completed }}%
+              </div>
+            </div>
+          </th>
           <th>{{ user.name }}</th>
+          <th>{{ user.folders }}</th>
           <th>{{ user.audios.translated }}</th>
-          <th>{{ user.audios.reviewed }}</th>
-          <th>{{ user.audios.folders }}</th>
-          <th>{{ user.audios.total_time }}</th>
-          <th>{{ user.payrol }}</th>
-          <th></th>
+          <th>{{ user.audios.total }}</th>
+
         </tr>
       </tbody>
     </table>
