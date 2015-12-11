@@ -111,7 +111,7 @@ namespace '/api' do
     folder = AudioFolder.find(params[:id])
     @user= User.find(params[:user_id])
     if @user
-      folder.take_by(@user) unless folder.audio_files.any?
+      folder.take_by(@user) unless folder.audio_files.translated.any?
       AudioFolder.all.map(&:status).to_json
     end
   end
