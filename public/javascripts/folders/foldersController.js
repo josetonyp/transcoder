@@ -31,7 +31,7 @@ window.Translator
       });
     };
     $scope.notResponsable = function(folder) {
-      return currentUser.admin && !folder.hasResponsable && !$scope.taking;
+      return currentUser.admin && !$scope.taking && folder.translated == 0;
     }
 
     $scope.folderReady = function(folder) {
