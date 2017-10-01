@@ -1,11 +1,11 @@
 worker_processes 4
-
-working_directory "/var/www/transcoder" # available in 0.94.0+
+home_dir = "/var/www/transcoder/public"
+working_directory home_dir # available in 0.94.0+
 listen "/var/run/my_app.sock", :backlog => 1024
 timeout 60
-pid "/var/www/transcoder/tmp/pids/unicorn.pid"
-stderr_path "/var/www/transcoder/log/unicorn.stderr.log"
-stdout_path "/var/www/transcoder/log/unicorn.stdout.log"
+pid "#{home_dir}/tmp/pids/unicorn.pid"
+stderr_path "#{home_dir}/log/unicorn.stderr.log"
+stdout_path "#{home_dir}/log/unicorn.stdout.log"
 
 # combine Ruby 2.0.0dev or REE with "preload_app true" for memory savings
 # http://rubyenterpriseedition.com/faq.html#adapt_apps_for_cow
