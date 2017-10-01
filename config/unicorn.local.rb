@@ -1,11 +1,13 @@
 worker_processes 4
 
-working_directory "/Users/josetonyp/Workspace/traductor" # available in 0.94.0+
+home_dir = "/home/josetonyp/Workspace/traductor"
+
+working_directory home_dir # available in 0.94.0+
 listen "127.0.0.1:3000", :tcp_nopush => true
 timeout 60
-pid "/Users/josetonyp/Workspace/traductor/tmp/pids/unicorn.pid"
-stderr_path "/Users/josetonyp/Workspace/traductor/log/unicorn.stderr.log"
-stdout_path "/Users/josetonyp/Workspace/traductor/log/unicorn.stdout.log"
+pid "#{home_dir}/tmp/pids/unicorn.pid"
+stderr_path "#{home_dir}/log/unicorn.stderr.log"
+stdout_path "#{home_dir}/log/unicorn.stdout.log"
 
 # combine Ruby 2.0.0dev or REE with "preload_app true" for memory savings
 # http://rubyenterpriseedition.com/faq.html#adapt_apps_for_cow
