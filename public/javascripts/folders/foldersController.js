@@ -1,7 +1,8 @@
 window.Translator
-  .controller('FoldersController', ['$scope', 'Folders', 'User', 'Satellite', 'currentUser', function($scope, Folders, User, Satellite, currentUser) {
+  .controller('FoldersController', ['$scope', 'Folders', 'User', 'Satellite', 'currentUser', '$cookies', function($scope, Folders, User, Satellite, currentUser, $cookies) {
     $scope.currentUser = currentUser;
     $scope.taking = false;
+    $scope.filterDownloaded = $cookies.get('filterDownloaded') == "downloaded";
     $scope.values = {selectedUser:  ""};
 
     User.all.getList({short: 1}).then(function(users) {
@@ -9,7 +10,8 @@ window.Translator
     });
 
     var findFolders = function() {
-      Folders.list(currentUser).then(function(folders) {
+      $scope.folders =  [];
+      Folders.list(currentUser, {filter: $cookies.get('filterDownloaded')}).then(function(folders) {
         $scope.folders = folders;
         Satellite.transmit('folders.loaded', folders);
         return folders;
@@ -46,6 +48,18 @@ window.Translator
         return true;
       }
       return currentUser.id == folder.responsable.id ;
+    }
+
+    $scope.toggleDowloadedFilter = function() {
+      var prev = $cookies.get('filterDownloaded');
+      $cookies.remove('filterDownloaded');
+      if (prev == "none") {
+        $cookies.put('filterDownloaded', 'downloaded');
+      } else {
+        $cookies.put('filterDownloaded', 'none');
+      }
+      $scope.filterDownloaded = $cookies.get('filterDownloaded') == "downloaded";
+      findFolders();
     }
 
   }]);

@@ -1,5 +1,11 @@
 <div class="row">
 
+<div class="well well-sm">
+  <div class="btn-group" role="group" aria-label="...">
+    <button type="button" ng-class="{'btn-default': !filterDownloaded, 'btn-success': filterDownloaded}" ng-click="toggleDowloadedFilter()">Downloaded</button>
+  </div>
+</div>
+
   <div class="table-responsive">
     <table class="table table-bordered table-hover">
       <thead>
@@ -18,6 +24,7 @@
             <div>
               <a class="btn btn-primary" ng-show="folderIsMine(folder)" style="float:left" ui-sref="folders({id: folder.id})" class="btn">{{ folder.name_short }}</a>
               <span ng-hide="folderIsMine(folder)">{{ folder.id }}</span>
+              <span style="font-size: 0.8em; color: gray; padding: 5px 20px">{{ folder.created_at }}</span>
               <span style="float:right">[{{ folder.duration }}]</span>
             </div>
           </td>

@@ -93,7 +93,11 @@ namespace '/api' do
       if params[:count].to_s == 1.to_s
         [AudioFolder.count].to_json
       else
-        AudioFolder.all.map(&:status).to_json
+        if params[:filter] == "downloaded"
+          AudioFolder.where(downloaded: false)
+        else
+          AudioFolder
+        end.all.map(&:status).to_json
       end
     end
   end

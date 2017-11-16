@@ -134,7 +134,8 @@ class AudioFolder
       duration: duration.gmtime.strftime('%H:%M:%S'),
       responsable: responsable,
       hasResponsable: !responsable.nil?,
-      downloaded: downloaded
+      downloaded: downloaded,
+      created_at: created_at.strftime('%F')
     }
   end
 
@@ -156,7 +157,8 @@ class AudioFolder
       duration: duration.gmtime.strftime('%H:%M:%S'),
       responsable: responsable,
       hasResponsable: !responsable.nil?,
-      downloaded: downloaded
+      downloaded: downloaded,
+      created_at: created_at.strftime('%F')
     }
   end
 

@@ -2,5 +2,6 @@
 window.Translator = angular.module('Translator', [
   'ngRoute',
   'restangular',
-  'ui.router'
+  'ui.router',
+  'ngCookies'
 ]);

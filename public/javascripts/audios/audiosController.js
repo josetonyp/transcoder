@@ -44,7 +44,6 @@ window.Translator
 
     var reloadFolderInfo = function() {
       Folders.get($stateParams.id, {page: page }).then(function(folder) {
-        console.log(folder);
         $scope.folderInfo = folder;
       });
     }
