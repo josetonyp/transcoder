@@ -80,6 +80,7 @@ class AudioFile
         update_attributes!( translation: translation.strip, status: 'translated', translator: user )
       end
     end
+    audio_folder.next! unless audio_folder.reviewed?
   end
 
   def self.total_duration

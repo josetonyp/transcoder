@@ -60,8 +60,8 @@
               <a class="btn btn-primary" ui-sref="folders({id: folder.id})" class="btn">Edit</a>
             </span>
             <span ng-show="currentUser.admin">
-              <a class="btn btn-warning" ui-sref="folders_review({id: folder.id})" class="btn">Review</a>
-              <a class="btn" ng-class="{btn: true, 'btn-default': folder.downloaded, 'btn-success': !folder.downloaded}" ng-show="folderReady(folder)" target="_blank" href="/api/audio_folders_dowload/{{ folder.id }}" class="btn">Download</a>
+              <a class="btn btn-warning" ui-sref="folders_review({id: folder.id})" ng-show="folder.status == 'translated' || folder.status == 'reviewed'" class="btn">Review</a>
+              <a class="btn" ng-class="{btn: true, 'btn-default': folder.downloaded, 'btn-success': !folder.downloaded}" ng-show="folderReady(folder)" target="_blank" href="/api/audio_folders_dowload/{{ folder.id }}" class="btn" >Download</a>
             </span>
           </td>
         </tr>

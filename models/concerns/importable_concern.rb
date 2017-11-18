@@ -24,6 +24,7 @@ module Importable
                     .txtme( File.read("#{wfile}.txt").strip )
                 end
               end
+              folder.imported!
               folder.update_folder_duration
             end
 

@@ -21,4 +21,17 @@ module StateMachine
       self.status == attribute.to_s
     end
   end
+
+  def next!
+    case status
+    when "imported"
+      started! if translated_audio_count > 0
+    when "started"
+      translated! if translated_audio_count ==  audio_count
+    when "translated"
+      reviewed! if reviewed_audio_count  ==  audio_count
+    when "reviewed"
+      downloaded!
+    end
+  end
 end

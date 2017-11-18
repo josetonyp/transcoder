@@ -38,7 +38,7 @@ window.Translator
     }
 
     $scope.folderReady = function(folder) {
-      return folder.status == 'ready';
+      return folder.status == 'reviewed';
     };
 
     $scope.folderIsMine = function(folder) {

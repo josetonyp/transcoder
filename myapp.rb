@@ -53,14 +53,7 @@ end
 
 namespace '/api' do
 
-  # AudioFiles
-  get '/audio_files' do
-    content_type :json
-    if @user
-      page = params["page"].nil? ? 1 : params["page"].to_i
-      AudioFile.paginate( page: page, per_page: 30 ).map(&:prep_json).to_json
-    end
-  end
+  # Audios
 
   get '/audio_files/review' do
     content_type :json
@@ -82,10 +75,11 @@ namespace '/api' do
     if @user
       audio = AudioFile.find(params['file'])
       audio.translate( translation: params['value'], user: @user, review: params['review'] == "true")
-      audio.audio_folder.started! if audio.audio_folder.imported?
       audio.reload.to_json
     end
   end
+
+  # Folders
 
   get '/audio_folders' do
     content_type :json
@@ -123,8 +117,21 @@ namespace '/api' do
   get '/audio_folders_dowload/:id' do
     return unless @user
     folder = AudioFolder.find(params[:id])
-    folder.build
-    send_file folder.zipfile_name, filename: folder.zipfile_name
+    if folder.reviewed?
+      folder.build
+      folder.next!
+      send_file(folder.zipfile_name, filename: folder.zipfile_name)
+    end
+  end
+
+  post '/upload_folder' do
+    if @user and @user.admin
+      tempfile = params[:file][:tempfile]
+      filename = File.join(APPROOT,"folders", params[:file][:filename])
+      FileUtils.copy(tempfile.path, filename)
+      AudioFolder.digest(filename)
+    end
+    redirect "/home"
   end
 
   # User
@@ -146,16 +153,6 @@ namespace '/api' do
       status 404
       {}.to_json
     end
-  end
-
-  post '/upload_folder' do
-    if @user and @user.admin
-      tempfile = params[:file][:tempfile]
-      filename = File.join(APPROOT,"folders", params[:file][:filename])
-      FileUtils.copy(tempfile.path, filename)
-      AudioFolder.digest(filename)
-    end
-    redirect "/home"
   end
 
   post '/account/login' do
