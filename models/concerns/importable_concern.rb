@@ -40,6 +40,7 @@ module Importable
       importer.unzip.tap do |imported|
         factory(imported.sanitized_name, imported.wavs.empty?).tap do |folder|
           folder.audio_files.destroy_all
+          folder.update_attributes(duration: nil)
           folder.imported!
         end
       end
@@ -64,11 +65,16 @@ module Importable
     "#{APPROOT}/folders/#{name}"
   end
 
+  def destroy_wav_files_folder
+    FileUtils.rm_rf(wav_files_folder) if Dir.exists?(wav_files_folder)
+  end
+
   def digest_audio_files
     Dir.glob("#{wav_files_folder}/*.wav").each do |wfile|
       file = digest_wav(wfile)
       AudioFile.upfind(Sanitize::base(file), self).waveme( file )
     end
+    destroy_wav_files_folder
   end
 
   def digest_text_files

@@ -110,7 +110,6 @@ namespace '/api' do
       folder = AudioFolder.find(params[:id])
       folder.digest_audio_files
       folder.update_folder_duration
-      # folder.next!
     end
 
   end

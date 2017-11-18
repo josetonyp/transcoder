@@ -60,7 +60,7 @@
               <a class="btn btn-primary" ui-sref="folders({id: folder.id})" class="btn">Edit</a>
             </span>
             <span ng-show="currentUser.admin">
-              <a class="btn btn-info" ng-show="folder.status == 'imported'" ng-click="processFiles(folder.id)">Process Files</a>
+              <a class="btn btn-info" ng-show="folder.status == 'imported' && folder.audios == 0" ng-click="processFiles(folder.id)">Process Files</a>
               <a class="btn btn-warning" ui-sref="folders_review({id: folder.id})" ng-show="folder.status == 'translated' || folder.status == 'reviewed'">Review</a>
               <a class="btn" ng-class="{btn: true, 'btn-default': folder.downloaded, 'btn-success': !folder.downloaded}" ng-show="folderReady(folder)" target="_blank" href="/api/audio_folders_dowload/{{ folder.id }}">Download</a>
             </span>
