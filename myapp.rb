@@ -104,6 +104,17 @@ namespace '/api' do
     end
   end
 
+  get '/audio_folders/:id/process_files' do
+    content_type :json
+    if @user and @user.admin
+      folder = AudioFolder.find(params[:id])
+      folder.digest_audio_files
+      folder.update_folder_duration
+      # folder.next!
+    end
+
+  end
+
   put '/audio_folders/:id' do
     content_type :json
     folder = AudioFolder.find(params[:id])

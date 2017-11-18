@@ -42,7 +42,7 @@ module StateMachine
   end
 
   def translated_audio_count
-    @translated_audio_count ||= audio_files.only(:translation).where( :translation.ne => "").count
+    @translated_audio_count ||= audio_files.only(:translation).where(:translation.ne => "").count
   end
 
   def reviewed_audio_count

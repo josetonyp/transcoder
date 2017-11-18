@@ -33,6 +33,7 @@ window.Translator
         $scope.values.selectedUser = "";
       });
     };
+
     $scope.notResponsable = function(folder) {
       return currentUser.admin && !$scope.taking && folder.translated == 0;
     }
@@ -65,6 +66,12 @@ window.Translator
 
     $scope.getFolderStatus = function(name) {
       return $cookies.get('foolderStatus') == name;
+    }
+
+    $scope.processFiles = function(folder_id) {
+      Folders.processFiles(folder_id).then(function(folder) {
+        $scope.findFolders();
+      });
     }
 
   }]);

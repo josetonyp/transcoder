@@ -17,6 +17,9 @@ window.Translator
       },
       get: function(folder_id, options) {
         return Restangular.one("api/audio_folders", folder_id).get(options);
+      },
+      processFiles: function(folder_id) {
+        return Restangular.one("api/audio_folders", folder_id).one('process_files').get();
       }
     };
   }]);

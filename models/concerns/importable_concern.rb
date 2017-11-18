@@ -6,7 +6,7 @@ module Importable
   module ClassMethods
     def import
       threads=[]
-      Dir.glob("#{INFOLDER}/*.zip").each do |file|
+      Dir.glob("#{AudioFolder::INFOLDER}/*.zip").each do |file|
         threads << Thread.new {
           Importer.new(file).unzip.tap do |imported|
 
@@ -43,6 +43,7 @@ module Importable
           folder.imported!
         end
       end
+      importer
     end
 
     def factory( name, only_text = false )
@@ -59,6 +60,22 @@ module Importable
     end
   end
 
+  def wav_files_folder
+    "#{APPROOT}/folders/#{name}"
+  end
+
+  def digest_audio_files
+    Dir.glob("#{wav_files_folder}/*.wav").each do |wfile|
+      file = digest_wav(wfile)
+      AudioFile.upfind(Sanitize::base(file), self).waveme( file )
+    end
+  end
+
+  def digest_text_files
+    Dir.glob("#{wav_files_folder}/*.txt").each do |tfile|
+      AudioFile.upfind( Sanitize::base( tfile.first.gsub(/.txt$/, '') ), self).txtme( File.read(tfile).strip )
+    end
+  end
 
   # Instance methods
   def digest_wav( wav_file )
