@@ -8,27 +8,11 @@ module Importable
       threads=[]
       Dir.glob("#{AudioFolder::INFOLDER}/*.zip").each do |file|
         threads << Thread.new {
-          Importer.new(file).unzip.tap do |imported|
-
-            factory(imported.sanitized_name, imported.wavs.empty?).tap do |folder|
-              if imported.wavs.empty?
-                imported.txts.each do |tfile|
-                  AudioFile.upfind( Sanitize::base( tfile.first.gsub(/.txt$/, '') ), folder )
-                    .txtme( File.read(tfile).strip )
-                end
-              else
-                imported.wavs.each do |wfile|
-                  file = folder.digest_wav(wfile)
-                  AudioFile.upfind( Sanitize::base(file), folder )
-                    .waveme( file )
-                    .txtme( File.read("#{wfile}.txt").strip )
-                end
-              end
-              folder.imported!
-              folder.update_folder_duration
-            end
-
-          end.destroy
+          digest(file).tap do |folder|
+            folder.digest_audio_files
+            folder.update_folder_duration
+            folder.imported!
+          end
         }
       end
       threads.map(&:join)
@@ -38,13 +22,13 @@ module Importable
       importer = Importer.new(file)
       return unless factory(importer.sanitized_name).imported?
       importer.unzip.tap do |imported|
-        factory(imported.sanitized_name, imported.wavs.empty?).tap do |folder|
+        factory(imported.sanitized_name).tap do |folder|
           folder.audio_files.destroy_all
           folder.update_attributes(duration: nil)
           folder.imported!
         end
       end
-      importer
+      factory(importer.sanitized_name)
     end
 
     def factory( name, only_text = false )
