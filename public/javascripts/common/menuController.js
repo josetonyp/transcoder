@@ -3,8 +3,8 @@ window.Translator
     $scope.currentUser = currentUser;
     $scope.folders_count = "";
 
-    Satellite.listen('folders.loaded', $scope, function(_, folders) {
-      $scope.folders_count = '(' + folders.length + ')'
+    Satellite.listen('folders.loaded', $scope, function(_, count) {
+      $scope.folders_count = '(' + count + ')'
     });
 
     var reloadUser = function() {

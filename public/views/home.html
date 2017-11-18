@@ -74,3 +74,25 @@
   </div>
 
 </div>
+
+<div class="row">
+  <nav>
+    <ul class="pagination">
+      <li>
+        <a aria-label="Previous" ng-click="prevPage()">
+          <span >&laquo;</span>
+        </a>
+      </li>
+
+      <li ng-repeat="page in pages" ng-hide="{{review}}" ng-class="{active: current_page == (page + 1) }">
+        <a ui-sref="home({page: page + 1})">{{page+1}}</a>
+      </li>
+
+      <li>
+        <a aria-label="Next" ng-click="nextPage()">
+          <span >&raquo;</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+</div>

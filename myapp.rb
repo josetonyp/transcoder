@@ -87,11 +87,22 @@ namespace '/api' do
       if params[:count].to_s == 1.to_s
         [AudioFolder.count].to_json
       else
-        unless params[:filter].empty?
-          AudioFolder.where(status: params[:filter])
-        else
+        page = params["page"].nil? ? 1 : params["page"].to_i
+        folders = if params[:filter].nil? || params[:filter].empty?
           AudioFolder
-        end.all.map(&:as_audio_attributes).to_json
+        else
+          AudioFolder.where(status: params[:filter])
+        end
+
+        unless @user.admin?
+          folders = folders.for_user(@user)
+        end
+
+        folders = folders.paginate(page:page, per_page: 10)
+
+        {folders: folders.map(&:as_audio_attributes),
+          total: folders.total_entries,
+          pages: folders.total_pages}.to_json
       end
     end
   end

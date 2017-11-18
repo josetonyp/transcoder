@@ -1,9 +1,17 @@
 window.Translator
-  .controller('FoldersController', ['$scope', 'Folders', 'User', 'Satellite', 'currentUser', '$cookies', function($scope, Folders, User, Satellite, currentUser, $cookies) {
+  .controller('FoldersController', ['$scope', 'Folders', 'User', 'Satellite', 'currentUser', '$cookies',  '$stateParams', "$state", function($scope, Folders, User, Satellite, currentUser, $cookies, $stateParams, $state) {
     $scope.currentUser = currentUser;
     $scope.taking = false;
     $scope.foolderStatus = $cookies.get('foolderStatus');
     $scope.values = {selectedUser:  ""};
+
+    var page = 1;
+
+    if(!_.isUndefined($stateParams.page)) {
+      page = parseInt($stateParams.page);
+    }
+
+    $scope.current_page = page;
 
     User.all.getList({short: 1}).then(function(users) {
       $scope.select_users = users;
@@ -11,10 +19,12 @@ window.Translator
 
     $scope.findFolders = function() {
       $scope.folders =  [];
-      Folders.list(currentUser, {filter: $cookies.get('foolderStatus')}).then(function(folders) {
-        $scope.folders = folders;
-        Satellite.transmit('folders.loaded', folders);
-        return folders;
+      Folders.list(currentUser, {page: $scope.current_page, filter: $cookies.get('foolderStatus')}).then(function(xhr) {
+        $scope.foldersResponse = xhr;
+        $scope.folders = xhr.folders;
+        $scope.pages = _.range(xhr.pages);
+        Satellite.transmit('folders.loaded', xhr.total);
+        return xhr.folders;
       });
     };
 
@@ -28,7 +38,7 @@ window.Translator
     $scope.take = function(folder, user_id) {
       $scope.taking = true;
       Folders.take(currentUser, folder, user_id).then(function(folders) {
-        $scope.folders = folders;
+        $scope.findFolders();
         $scope.taking = false;
         $scope.values.selectedUser = "";
       });
@@ -73,5 +83,15 @@ window.Translator
         $scope.findFolders();
       });
     }
+
+    $scope.nextPage = function(){
+      if (page < $scope.foldersResponse.pages)
+        $state.go( "home", { page: page + 1} );
+    };
+
+    $scope.prevPage = function(){
+      if (page > 1)
+        $state.go( "home", { page: page - 1} );
+    };
 
   }]);

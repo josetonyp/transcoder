@@ -26,7 +26,7 @@ window.Translator
         }
       })
       .state('home', {
-        url: '/home',
+        url: '/home?page',
         parent: 'app',
         templateUrl: '/views/home.html',
         controller: 'FoldersController'
