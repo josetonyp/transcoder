@@ -2,8 +2,12 @@
 
 <div class="well well-sm" ng-show="currentUser.admin">
   <div class="btn-group" role="group" aria-label="...">
-    <button type="button" ng-class="{'btn-default': !filterDownloaded, 'btn-success': filterDownloaded}" ng-click="toggleDowloadedFilter()">Downloaded</button>
-    <button type="button" ng-class="{'btn-default': !filterDownloaded, 'btn-success': filterDownloaded}" ng-click="toggleNeedsProcessingFilter()">Needs Processing</button>
+    <button type="button" ng-class="{btn: true, 'btn-default': !getFolderStatus(''), 'btn-success': getFolderStatus('')}" ng-click="toggleFilter('')">All</button>
+    <button type="button" ng-class="{btn: true, 'btn-default': !getFolderStatus('imported'), 'btn-success': getFolderStatus('imported')}" ng-click="toggleFilter('imported')">Imported</button>
+    <button type="button" ng-class="{btn: true, 'btn-default': !getFolderStatus('started'), 'btn-success': getFolderStatus('started')}" ng-click="toggleFilter('started')">Started</button>
+    <button type="button" ng-class="{btn: true, 'btn-default': !getFolderStatus('translated'), 'btn-success': getFolderStatus('translated')}" ng-click="toggleFilter('translated')">Translated</button>
+    <button type="button" ng-class="{btn: true, 'btn-default': !getFolderStatus('reviewed'), 'btn-success': getFolderStatus('reviewed')}" ng-click="toggleFilter('reviewed')">Reviewed</button>
+    <button type="button" ng-class="{btn: true, 'btn-default': !getFolderStatus('downloaded'), 'btn-success': getFolderStatus('downloaded')}" ng-click="toggleFilter('downloaded')">Downloaded</button>
   </div>
     <div class="upload_file_form col-xs-6 pull-right">
       <form action="/api/upload_folder" method="post" enctype="multipart/form-data">
@@ -37,6 +41,9 @@
             </div>
           </td>
           <td class="col-xs-3 text-center" >
+            <div class="status" ng-show="currentUser.admin">
+              {{ folder.status }}
+            </div>
             <div class="progress">
               <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="{{ folder.translated }}" aria-valuemin="0" aria-valuemax="{{ folder.audios }}" style="width: {{ folder.completed }}%">
                 {{ folder.completed }}%
@@ -54,7 +61,7 @@
             </span>
             <span ng-show="currentUser.admin">
               <a class="btn btn-warning" ui-sref="folders_review({id: folder.id})" class="btn">Review</a>
-              <a class="btn" ng-class="{'btn-default': folder.downloaded, 'btn-success': !folder.downloaded}" ng-show="folderReady(folder)" target="_blank" href="/api/audio_folders_dowload/{{ folder.id }}" class="btn">Download</a>
+              <a class="btn" ng-class="{btn: true, 'btn-default': folder.downloaded, 'btn-success': !folder.downloaded}" ng-show="folderReady(folder)" target="_blank" href="/api/audio_folders_dowload/{{ folder.id }}" class="btn">Download</a>
             </span>
           </td>
         </tr>

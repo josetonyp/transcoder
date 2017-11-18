@@ -1,5 +1,4 @@
 class Importer
-
   include FileUtils
 
   def initialize(path)
@@ -7,10 +6,10 @@ class Importer
     @extract_foder = "#{APPROOT}/folders"
   end
 
-  def import
-    destroy
+  def unzip
+    destroy_uziped_folder
     system "unzip -q #{@path} -d #{dest_folder}"
-    delete
+    delete_original_file
     self
   end
 
@@ -30,13 +29,13 @@ class Importer
     Sanitize::zip @path
   end
 
-  def destroy
+  def destroy_uziped_folder
     rm_rf(dest_folder) if Dir.exists?(dest_folder)
   end
 
   private
 
-  def delete
+  def delete_original_file
     rm(@path)
   end
 

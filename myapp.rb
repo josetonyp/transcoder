@@ -15,7 +15,7 @@ require 'awesome_print'
 require 'pry'
 require 'pry-doc'
 
-Dir["models/*.rb"].each {|file| require_relative file }
+Dir["models/**/*.rb"].each {|file| require_relative file }
 
 
 APPROOT = File.expand_path(File.dirname(__FILE__))
@@ -82,6 +82,7 @@ namespace '/api' do
     if @user
       audio = AudioFile.find(params['file'])
       audio.translate( translation: params['value'], user: @user, review: params['review'] == "true")
+      audio.audio_folder.started! if audio.audio_folder.imported?
       audio.reload.to_json
     end
   end
@@ -92,11 +93,11 @@ namespace '/api' do
       if params[:count].to_s == 1.to_s
         [AudioFolder.count].to_json
       else
-        if params[:filter] == "downloaded"
-          AudioFolder.where(downloaded: false)
+        unless params[:filter].empty?
+          AudioFolder.where(status: params[:filter])
         else
           AudioFolder
-        end.all.map(&:status).to_json
+        end.all.map(&:as_audio_attributes).to_json
       end
     end
   end
@@ -115,7 +116,7 @@ namespace '/api' do
     @user= User.find(params[:user_id])
     if @user
       folder.take_by(@user) unless folder.audio_files.translated.any?
-      AudioFolder.all.map(&:status).to_json
+      AudioFolder.all.map(&:as_audio_attributes).to_json
     end
   end
 
@@ -150,8 +151,9 @@ namespace '/api' do
   post '/upload_folder' do
     if @user and @user.admin
       tempfile = params[:file][:tempfile]
-      filename = params[:file][:filename]
-      FileUtils.copy(tempfile.path, File.join(APPROOT,"folders", filename))
+      filename = File.join(APPROOT,"folders", params[:file][:filename])
+      FileUtils.copy(tempfile.path, filename)
+      AudioFolder.digest(filename)
     end
     redirect "/home"
   end
