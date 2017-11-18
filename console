@@ -1,2 +1,0 @@
-#!/bin/bash
-bundle exec pry -I ./ -r myapp.rb

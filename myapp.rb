@@ -54,7 +54,6 @@ end
 namespace '/api' do
 
   # AudioFiles
-
   get '/audio_files' do
     content_type :json
     if @user
@@ -148,6 +147,15 @@ namespace '/api' do
     end
   end
 
+  post '/upload_folder' do
+    if @user and @user.admin
+      tempfile = params[:file][:tempfile]
+      filename = params[:file][:filename]
+      FileUtils.copy(tempfile.path, File.join(APPROOT,"folders", filename))
+    end
+    redirect "/home"
+  end
+
   post '/account/login' do
     content_type :json
     params =  JSON.parse(request.body.read)
@@ -166,5 +174,6 @@ namespace '/api' do
   post '/account/logout' do
     session.destroy
   end
+
 end
 
