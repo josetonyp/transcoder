@@ -26,17 +26,28 @@ window.Translator
 
     findAudios(page);
 
-    $scope.nextPage = function(){
+    var actionName = function(review) {
+      var action = "";
+      if (review) {
+        action = "folders_review";
+      } else {
+        action = "folders";
+      }
+
+      return action;
+    }
+
+    $scope.nextPage = function(review){
       if (page < $scope.folder.pages)
-        $state.go( "folders", { id: $stateParams.id , page: page + 1} );
+        $state.go( actionName(review), { id: $stateParams.id , page: page + 1} );
     };
-    $scope.prevPage = function(){
+    $scope.prevPage = function(review){
       if (page > 1)
-        $state.go( "folders", { id: $stateParams.id , page: page - 1} );
+        $state.go( actionName(review), { id: $stateParams.id , page: page - 1} );
     };
 
-    Satellite.listen("next_page", $scope, function() {
-      $scope.nextPage();
+    Satellite.listen("next_page", $scope, function(event, review) {
+      $scope.nextPage(review);
     });
 
 

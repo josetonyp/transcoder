@@ -75,7 +75,7 @@ window.Translator
               Satellite.transmit('audio.reviewed', audio);
             }
             if (area.attr("tabindex") == total_audios &&  audio.status != "new"){
-              Satellite.transmit("next_page");
+              Satellite.transmit("next_page", attrs.review == 'true');
             }
           });
         });
