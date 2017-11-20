@@ -18,7 +18,6 @@ window.Translator
     });
 
     $scope.findFolders = function(page) {
-      console.log(page)
       var currentPage = page;
       if (currentPage == undefined) {
         currentPage = $scope.current_page;
