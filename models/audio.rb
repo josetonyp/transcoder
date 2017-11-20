@@ -68,7 +68,7 @@ class AudioFile
   end
 
   def txtme( text )
-    update_attributes!( translation: text )
+    update_attributes!( translation: text.strip, status: 'translated' )
     self
   end
 

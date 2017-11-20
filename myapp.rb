@@ -15,7 +15,8 @@ require 'awesome_print'
 require 'pry'
 require 'pry-doc'
 
-Dir["models/**/*.rb"].each {|file| require_relative file }
+Dir.glob("models/concerns/*.rb").each {|file| require_relative file }
+Dir.glob("models/*.rb").each {|file| require_relative file }
 
 
 APPROOT = File.expand_path(File.dirname(__FILE__))
@@ -121,6 +122,7 @@ namespace '/api' do
       folder = AudioFolder.find(params[:id])
       folder.digest_audio_files
       folder.update_folder_duration
+      folder.destroy_wav_files_folder
     end
 
   end

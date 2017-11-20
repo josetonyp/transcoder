@@ -4,14 +4,15 @@ module Importable
   end
 
   module ClassMethods
-    def import
+    def import(text=false)
       threads=[]
       Dir.glob("#{AudioFolder::INFOLDER}/*.zip").each do |file|
         threads << Thread.new {
           digest(file).tap do |folder|
             folder.digest_audio_files
             folder.update_folder_duration
-            folder.imported!
+            folder.digest_text_files if text
+            folder.destroy_wav_files_folder
           end
         }
       end
@@ -58,12 +59,11 @@ module Importable
       file = digest_wav(wfile)
       AudioFile.upfind(Sanitize::base(file), self).waveme( file )
     end
-    destroy_wav_files_folder
   end
 
   def digest_text_files
     Dir.glob("#{wav_files_folder}/*.txt").each do |tfile|
-      AudioFile.upfind( Sanitize::base( tfile.first.gsub(/.txt$/, '') ), self).txtme( File.read(tfile).strip )
+      AudioFile.upfind( Sanitize::base( tfile.gsub(/.txt$/, '') ), self).txtme( File.read(tfile).strip )
     end
   end
 
