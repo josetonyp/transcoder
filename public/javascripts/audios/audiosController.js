@@ -50,7 +50,11 @@ window.Translator
       $scope.nextPage(review);
     });
 
-
+    $scope.setFolderReviewed = function(folderInfo) {
+      Folders.setReviewed(folderInfo.id).then(function(folder) {
+        $scope.folderInfo = folder;
+      });
+    }
 
 
     var reloadFolderInfo = function() {

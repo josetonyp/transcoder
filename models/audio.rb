@@ -11,6 +11,7 @@ class AudioFile
   default_scope ->(){ order_by( id: 'asc') }
 
   scope :translated, -> { where(:status.ne => 'new')}
+  scope :just_translated, -> { where(status: 'translated')}
   scope :reviewed, -> { where(status: 'reviewed')}
 
   field :name, type: String
@@ -72,9 +73,13 @@ class AudioFile
     self
   end
 
+  def reviewed_by!(user:)
+    update_attributes!(status: 'reviewed', reviewer: user)
+  end
+
   def translate(translation:, user:, review: false)
     if review
-      update_attributes!(status: 'reviewed', reviewer: user)
+      reviewed_by!(user: user)
     else
       if translation.strip != "" && translation.strip != "[bad wave] ??"
         update_attributes!( translation: translation.strip, status: 'translated', translator: user )

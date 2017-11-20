@@ -29,6 +29,10 @@
     <div class="label label-success col-xs-4">{{ folderInfo.translated }}</div>
     <div class="label label-info col-xs-4">{{ folderInfo.reviewed }}</div>
     <br/>
+    <div class="col-xs-14 text-center well" ng-if="review && currentUser.admin">
+      <br />
+      <a class="btn btn-warning" href="#" ng-click="setFolderReviewed(folderInfo)"> Reviewed</a>
+    </div>
     <br/>
 
     <p>

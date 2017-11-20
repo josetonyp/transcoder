@@ -17,9 +17,15 @@ window.Translator
       $scope.select_users = users;
     });
 
-    $scope.findFolders = function() {
+    $scope.findFolders = function(page) {
+      console.log(page)
+      var currentPage = page;
+      if (currentPage == undefined) {
+        currentPage = $scope.current_page;
+      }
+
       $scope.folders =  [];
-      Folders.list(currentUser, {page: $scope.current_page, filter: $cookies.get('foolderStatus')}).then(function(xhr) {
+      return Folders.list(currentUser, {page: currentPage, filter: $cookies.get('foolderStatus')}).then(function(xhr) {
         $scope.foldersResponse = xhr;
         $scope.folders = xhr.folders;
         $scope.pages = _.range(xhr.pages);
@@ -71,7 +77,10 @@ window.Translator
     $scope.toggleFilter = function(name) {
       toggleFilter('foolderStatus', name);
       $scope.foolderStatus = $cookies.get('foolderStatus');
-      $scope.findFolders()
+      $state.transitionTo($state.current, { page: 1}, {
+          reload: true, inherit: false, notify: false
+        });
+      $scope.findFolders(1);
     }
 
     $scope.getFolderStatus = function(name) {
@@ -85,13 +94,15 @@ window.Translator
     }
 
     $scope.nextPage = function(){
-      if (page < $scope.foldersResponse.pages)
+      if (page < $scope.foldersResponse.pages) {
         $state.go( "home", { page: page + 1} );
+      }
     };
 
     $scope.prevPage = function(){
-      if (page > 1)
+      if (page > 1) {
         $state.go( "home", { page: page - 1} );
+      }
     };
 
   }]);

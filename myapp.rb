@@ -124,7 +124,19 @@ namespace '/api' do
       folder.update_folder_duration
       folder.destroy_wav_files_folder
     end
+  end
 
+  get '/audio_folders/:id/reviewed' do
+    content_type :json
+    if @user and @user.admin
+      folder = AudioFolder.find(params[:id])
+      folder.audio_files.just_translated.all.each do |audio|
+        audio.reviewed_by!(user: @user)
+      end
+
+      page = params["page"].nil? ? 1 : params["page"].to_i
+      folder.prep_json( page, review: false ).to_json
+    end
   end
 
   put '/audio_folders/:id' do
@@ -132,7 +144,7 @@ namespace '/api' do
     folder = AudioFolder.find(params[:id])
     @user= User.find(params[:user_id])
     if @user
-      folder.take_by(@user) unless folder.audio_files.translated.any?
+      folder.take_by(@user) unless folder.audio_files.active_translated.any?
       AudioFolder.all.map(&:as_audio_attributes).to_json
     end
   end
