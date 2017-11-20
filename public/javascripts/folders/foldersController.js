@@ -49,7 +49,7 @@ window.Translator
     }
 
     $scope.folderReady = function(folder) {
-      return folder.status == 'reviewed';
+      return (folder.status == 'reviewed' || folder.status == "downloaded");
     };
 
     $scope.folderIsMine = function(folder) {
