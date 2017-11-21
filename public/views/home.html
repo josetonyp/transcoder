@@ -19,11 +19,18 @@
 </div>
 
   <div class="table-responsive">
-    <table class="table table-bordered table-hover">
+    <div class="well text-center" ng-show="folders.length == 0">
+      <br />
+      <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
+      <span >Loading</span>
+      <br />
+    </div>
+
+    <table class="table table-bordered table-hover" ng-if="folders.length > 0">
       <thead>
         <tr>
-          <th>Me</th>
-          <th>Name</th>
+          <th>User</th>
+          <th>Folder name</th>
           <th>Status</th>
           <th></th>
         </tr>
@@ -35,7 +42,7 @@
           <td class="col-xs-4">
             <div>
               <a class="btn btn-primary" ng-show="folderIsMine(folder)" style="float:left" ui-sref="folders({id: folder.id})">{{ folder.name_short }}</a>
-              <span ng-hide="folderIsMine(folder)">{{ folder.id }}</span>
+              <span style="font-size: 0.8em; color: gray; padding: 5px 20px">{{ folder.id }}</span>
               <span style="font-size: 0.8em; color: gray; padding: 5px 20px">{{ folder.created_at }}</span>
               <span style="float:right">[{{ folder.duration }}]</span>
             </div>

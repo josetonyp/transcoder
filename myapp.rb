@@ -141,11 +141,13 @@ namespace '/api' do
 
   put '/audio_folders/:id' do
     content_type :json
-    folder = AudioFolder.find(params[:id])
-    @user= User.find(params[:user_id])
-    if @user
-      folder.take_by(@user) unless folder.audio_files.translated.any?
-      AudioFolder.all.map(&:as_audio_attributes).to_json
+    if @user and @user.admin
+      folder = AudioFolder.find(params[:id])
+      taking_user= User.find(params[:user_id])
+      if taking_user
+        folder.take_by(taking_user) unless folder.audio_files.translated.any?
+        true
+      end
     end
   end
 
