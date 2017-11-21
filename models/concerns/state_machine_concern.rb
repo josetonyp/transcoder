@@ -30,8 +30,6 @@ module StateMachine
       translated! if translated_audio_count ==  audio_count
     when "translated"
       reviewed! if reviewed_audio_count  ==  audio_count
-    when "reviewed"
-      downloaded!
     end
   end
 end

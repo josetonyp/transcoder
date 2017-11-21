@@ -133,7 +133,7 @@ namespace '/api' do
       folder.audio_files.just_translated.all.each do |audio|
         audio.reviewed_by!(user: @user)
       end
-
+      folder.next!
       page = params["page"].nil? ? 1 : params["page"].to_i
       folder.prep_json( page, review: false ).to_json
     end
@@ -144,7 +144,7 @@ namespace '/api' do
     folder = AudioFolder.find(params[:id])
     @user= User.find(params[:user_id])
     if @user
-      folder.take_by(@user) unless folder.audio_files.active_translated.any?
+      folder.take_by(@user) unless folder.audio_files.translated.any?
       AudioFolder.all.map(&:as_audio_attributes).to_json
     end
   end
@@ -154,7 +154,7 @@ namespace '/api' do
     folder = AudioFolder.find(params[:id])
     if folder.reviewed? || folder.downloaded?
       folder.build
-      folder.next!
+      folder.downloaded!
       send_file(folder.zipfile_name, filename: folder.zipfile_name)
     end
   end
