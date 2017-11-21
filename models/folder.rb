@@ -18,6 +18,10 @@ class AudioFolder
   belongs_to :translator, class_name: 'User'
   has_many :audio_files, dependent: :delete
 
+  index({ id: 1 }, {  name: "id_index" })
+  index({ name: 1 }, { unique: true, name: "name_index" })
+  index({ status: 1 }, { name: "status_index" })
+
   before_destroy do
     File.delete(zipfile_name) if File.exists?(zipfile_name)
     FileUtils.remove_dir(audio_wav_folder) if Dir.exists?(audio_wav_folder)

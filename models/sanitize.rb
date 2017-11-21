@@ -8,4 +8,8 @@ module Sanitize
   def self.txt( name )
     base(name.gsub(".txt", ""))
   end
+
+  def self.clear_empty_lines(name)
+    name.gsub("\n", "").gsub(/^\s{1,}/m, "").gsub(/\s{1,}$/m, "")
+  end
 end

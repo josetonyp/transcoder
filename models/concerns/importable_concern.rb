@@ -9,10 +9,14 @@ module Importable
       Dir.glob("#{AudioFolder::INFOLDER}/*.zip").each do |file|
         threads << Thread.new {
           digest(file).tap do |folder|
-            folder.digest_audio_files
-            folder.update_folder_duration
-            folder.digest_text_files if text
-            folder.destroy_wav_files_folder
+            if folder.nil?
+              ap "This #{file} folder is already imported and translated"
+            else
+              folder.digest_audio_files
+              folder.update_folder_duration
+              folder.digest_text_files if text
+              folder.destroy_wav_files_folder
+            end
           end
         }
       end
@@ -63,7 +67,7 @@ module Importable
 
   def digest_text_files
     Dir.glob("#{wav_files_folder}/*.txt").each do |tfile|
-      AudioFile.upfind( Sanitize::base( tfile.gsub(/.txt$/, '') ), self).txtme( File.read(tfile).strip )
+      AudioFile.upfind( Sanitize::base( tfile.gsub(/.txt$/, '') ), self).txtme( Sanitize::clear_empty_lines(File.read(tfile)) )
     end
   end
 

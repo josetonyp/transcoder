@@ -8,7 +8,7 @@ class Importer
 
   def unzip
     destroy_uziped_folder
-    system "unzip -q #{@path} -d #{dest_folder}"
+    system "unzip -qj #{@path} -d #{dest_folder}"
     delete_original_file
     self
   end
