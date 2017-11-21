@@ -4,23 +4,24 @@ module Importable
   end
 
   module ClassMethods
-    def import(text=false)
-      threads=[]
+    def import_batch(text=false)
       Dir.glob("#{AudioFolder::INFOLDER}/*.zip").each do |file|
-        threads << Thread.new {
-          digest(file).tap do |folder|
-            if folder.nil?
-              ap "This #{file} folder is already imported and translated"
-            else
-              folder.digest_audio_files
-              folder.update_folder_duration
-              folder.digest_text_files if text
-              folder.destroy_wav_files_folder
-            end
-          end
-        }
+        import(file, text)
       end
-      threads.map(&:join)
+    end
+
+    def import(file, text=false)
+      digest(file).tap do |folder|
+        if folder.nil?
+          ap "This #{file} folder is already imported and translated"
+        else
+          ap "Importing #{file} folder ..."
+          folder.digest_audio_files
+          folder.update_folder_duration
+          folder.digest_text_files if text
+          folder.destroy_wav_files_folder
+        end
+      end
     end
 
     def digest(file)
