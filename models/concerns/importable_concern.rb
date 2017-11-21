@@ -8,6 +8,10 @@ module Importable
       Dir.glob("#{AudioFolder::INFOLDER}/*.zip").each do |file|
         import(file, text)
       end
+      AudioFolder.remove_indexes
+      AudioFolder.create_indexes
+      AudioFile.remove_indexes
+      AudioFile.create_indexes
     end
 
     def import(file, text=false)
