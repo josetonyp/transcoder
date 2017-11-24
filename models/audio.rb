@@ -65,11 +65,13 @@ class AudioFile
   def waveme( outfile )
     wave = WaveInfo.new(outfile)
     update_attributes!( file: "/#{outfile}", duration: wave.duration, status: 'new', translation: '')
+    print "."
     self
   end
 
   def txtme( text )
     update_attributes!( translation: text.strip, status: 'translated' )
+    print "-"
     self
   end
 
