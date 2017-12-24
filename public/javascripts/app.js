@@ -56,6 +56,13 @@ window.Translator
         controller: 'UsersController'
       })
 
+      .state('user', {
+        url: '/users/:id',
+        parent: 'app',
+        templateUrl: '/views/user.html',
+        controller: 'UserController'
+      })
+
       .state('layout', {
         abstract: true,
         templateUrl: '/views/layout.html',

@@ -3,6 +3,9 @@ window.Translator
     var token = "";
     return {
       login: Restangular.one("api/account"),
-      all: Restangular.all("api/users")
+      all: Restangular.all("api/users"),
+      find: function (id) {
+        return Restangular.one("api/users", id).getList('folders');
+      }
     };
   }]);

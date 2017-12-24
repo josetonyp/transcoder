@@ -183,6 +183,14 @@ namespace '/api' do
     end
   end
 
+  get '/users/:id/folders' do
+    if @user and @user.admin
+      @tuser = User.find(params[:id])
+      @audio_folders = @tuser.audio_folders
+      @audio_folders.map(&:as_audio_attributes).to_json
+    end
+  end
+
   get '/account' do
     if @user
       @user.to_json
