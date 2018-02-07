@@ -23,9 +23,7 @@ class AudioFolder
   index({ status: 1 }, { name: "status_index" })
 
   before_destroy do
-    File.delete(zipfile_name) if File.exists?(zipfile_name)
-    FileUtils.remove_dir(audio_wav_folder) if Dir.exists?(audio_wav_folder)
-    FileUtils.remove_dir("#{audio_files_folder}") if Dir.exists?("#{audio_files_folder}")
+    remove_audio_files
   end
 
   include StateMachine
@@ -37,5 +35,14 @@ class AudioFolder
     self.translator = user
     save
     self
+  end
+
+
+  private
+
+  def remove_audio_files
+    File.delete(zipfile_name) if File.exists?(zipfile_name)
+    FileUtils.remove_dir(audio_wav_folder) if Dir.exists?(audio_wav_folder)
+    FileUtils.remove_dir("#{audio_files_folder}") if Dir.exists?("#{audio_files_folder}")
   end
 end
