@@ -16,26 +16,20 @@ module Importable
 
     def import(file, text=false)
       digest(file).tap do |folder|
-        if folder.nil?
-          ap "This #{file} folder is already imported and translated"
-        else
-          ap "Importing #{file} folder ..."
-          folder.digest_audio_files
-          folder.update_folder_duration
-          folder.digest_text_files if text
-          folder.destroy_wav_files_folder
-        end
+        ap "Importing #{file} folder ..."
+        folder.digest_audio_files
+        folder.update_folder_duration
+        folder.digest_text_files if text
+        folder.destroy_wav_files_folder
       end
     end
 
     def digest(file)
       importer = Importer.new(file)
-      return unless factory(importer.sanitized_name).imported?
       importer.unzip.tap do |imported|
         factory(imported.sanitized_name).tap do |folder|
-          folder.audio_files.destroy_all
           folder.update_attributes(duration: nil)
-          folder.imported!
+          folder.imported! unless folder.started?
         end
       end
       factory(importer.sanitized_name)

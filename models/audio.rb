@@ -64,7 +64,7 @@ class AudioFile
 
   def waveme( outfile )
     wave = WaveInfo.new(outfile)
-    update_attributes!( file: "/#{outfile}", duration: wave.duration, status: 'new', translation: '')
+    update_attributes!( file: "/#{outfile}", duration: wave.duration, status: 'new')
     print "."
     self
   end
