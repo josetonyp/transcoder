@@ -6,7 +6,7 @@ class AudioFile
 
   belongs_to :audio_folder
   belongs_to :translator, class_name: 'User'
-  belongs_to :reviewer, class_name: 'User'
+  belongs_to :reviewer, class_name: 'User', optional: true
 
   default_scope ->(){ order_by( id: 'asc') }
 
@@ -19,6 +19,10 @@ class AudioFile
   field :status, type: String, default: 'new'
   field :file, type: String
   field :duration, type: Float
+
+  after_save do
+    audio_folder.touch
+  end
 
   index({ id: 1 }, {  name: "id_index" })
   index({ name: 1, audio_folder: 1 }, { unique: true, name: "name_and_folder_uniq_index" })
@@ -87,6 +91,7 @@ class AudioFile
         update_attributes!( translation: translation.strip, status: 'translated', translator: user )
       end
     end
+    audio_folder.touch
     audio_folder.next! unless audio_folder.reviewed?
   end
 

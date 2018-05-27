@@ -21,7 +21,9 @@ module Serialisable
       responsable: responsable,
       hasResponsable: !responsable.nil?,
       downloaded: downloaded?,
-      created_at: created_at.strftime('%F')
+      created_at: created_at.strftime('%F %T'),
+      updated_at: updated_at.strftime('%F %T'),
+      history: history
     }
   end
 

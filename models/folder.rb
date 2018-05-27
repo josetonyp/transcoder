@@ -2,7 +2,8 @@ class AudioFolder
   include Mongoid::Document
   include Mongoid::Timestamps
 
-  default_scope ->(){ order_by( id: 'asc') }
+  scope :by_index, ->(){ order_by( id: 'asc') }
+  scope :by_last_updated, ->(){ order_by( updated_at: 'desc') }
 
   scope :for_user, ->(user){ where(translator: user) }
 
@@ -16,12 +17,14 @@ class AudioFolder
   field :downloaded, type: Boolean, default: false
 
   belongs_to :translator, class_name: 'User'
-  has_many :audio_files, dependent: :delete
+  has_many :audio_files, dependent: :destroy # it could be embed
+  embeds_many :status_changes, class_name: '::Change'
 
   index({ id: 1 }, {  name: "id_index" })
   index({ name: 1 }, { unique: true, name: "name_index" })
   index({ status: 1 }, { name: "status_index" })
   index({ translator: 1, status: 1 }, { name: "translator_status_index" })
+  index({ translator: 1, status: 1, updated_at: 1 }, { name: "translator_status_index" })
 
   before_destroy do
     remove_audio_files
@@ -39,6 +42,10 @@ class AudioFolder
     self
   end
 
+  def touch
+    self.updated_at = Time.now.utc
+    self.save
+  end
 
   private
 
@@ -47,4 +54,6 @@ class AudioFolder
     FileUtils.remove_dir(audio_wav_folder) if Dir.exists?(audio_wav_folder)
     FileUtils.remove_dir("#{audio_files_folder}") if Dir.exists?("#{audio_files_folder}")
   end
+
+
 end

@@ -1,36 +1,33 @@
 <div class="row">
 
   <div class="table-responsive">
-    <table class="table table-bordered table-striped table-hover">
+    <table class="table table-bordered table-striped table-hover" >
       <thead>
         <tr>
-          <th></th>
           <th>Name</th>
           <th>Folders</th>
-          <th>Translated</th>
-          <th>Total</th>
+          <th>started</th>
+          <th>translated</th>
+          <th>reviewed</th>
+          <th>downloaded</th>
+          <th>delivered</th>
+          <th>paid</th>
+          <th>archived</th>
         </tr>
       </thead>
       <tbody>
         <tr ng-repeat="user in users track by $index">
-          <th>
-            <div class="progress">
-              <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="{{ user.audios.translated }}" aria-valuemin="0" aria-valuemax="{{ user.audios.total }}" style="width: {{ user.audios.completed }}%">
-                {{ user.audios.completed }}%
-              </div>
-            </div>
-          </th>
-          <th>{{ user.name }}</th>
-          <th>{{ user.folders }}</th>
-          <th>{{ user.audios.translated }}</th>
-          <th>{{ user.audios.total }}</th>
-
+          <th><a class="btn btn-primary" ui-sref="user({id: user.id})">{{ user.name }}</a></th>
+          <th>{{ user.folders.count }}</th>
+          <th>{{ user.folders.started }}</th>
+          <th>{{ user.folders.translated }}</th>
+          <th>{{ user.folders.reviewed }}</th>
+          <th>{{ user.folders.downloaded }}</th>
+          <th>{{ user.folders.delivered }}</th>
+          <th>{{ user.folders.paid }}</th>
+          <th>{{ user.folders.archived }}</th>
         </tr>
       </tbody>
     </table>
-
-
-
   </div>
-
 </div>

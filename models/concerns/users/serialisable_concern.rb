@@ -10,8 +10,16 @@ module Users
         admin: admin,
         email: email,
         token: token,
-        folders: audio_folders.for_user(self).count(),
-        payrol: ""
+        folders: {
+          count: audio_folders.count(),
+          started: audio_folders.started.count(),
+          translated: audio_folders.translated.count(),
+          reviewed: audio_folders.reviewed.count(),
+          downloaded: audio_folders.downloaded.count(),
+          delivered: audio_folders.delivered.count(),
+          paid: audio_folders.paid.count(),
+          archived: audio_folders.archived.count(),
+        }
       }
     end
 

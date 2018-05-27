@@ -4,16 +4,17 @@ module StateMachine
   end
 
   module ClassMethods
-    ["imported", "started", "translated", "reviewed", "downloaded", "delivered", "paid"].each do |attribute|
+    ["imported", "started", "translated", "reviewed", "downloaded", "delivered", "paid", "archived"].each do |attribute|
       define_method("#{attribute}") do
         where(status: attribute.to_s)
       end
     end
   end
-  # [imported, started, ready, translated, reviewed, downloaded], "delivered", "paid" hacer funciones para los estados
+  # [imported, started, ready, translated, reviewed, downloaded], "delivered", "paid", "archived" hacer funciones para los estados
 
-  ["imported", "started", "translated", "reviewed", "downloaded", "delivered", "paid"].each do |attribute|
+  ["imported", "started", "translated", "reviewed", "downloaded", "delivered", "paid", "archived"].each do |attribute|
     define_method("#{attribute}!") do
+      self.status_changes.create!(from: self.status, to: attribute.to_s)
       self.update_attributes(status: attribute.to_s)
     end
 
@@ -32,4 +33,9 @@ module StateMachine
       reviewed! if reviewed_audio_count  ==  audio_count
     end
   end
+
+  def history
+    status_changes.map(&:to_h)
+  end
+
 end

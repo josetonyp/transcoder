@@ -86,13 +86,13 @@ namespace '/api' do
     content_type :json
     if @user
       if params[:count].to_s == 1.to_s
-        [AudioFolder.count].to_json
+        [AudioFolder.by_index.count].to_json
       else
         page = params["page"].nil? ? 1 : params["page"].to_i
         folders = if params[:filter].nil? || params[:filter].empty?
           AudioFolder
         else
-          AudioFolder.where(status: params[:filter])
+          AudioFolder.by_index.where(status: params[:filter])
         end
 
         unless @user.admin?
@@ -112,14 +112,14 @@ namespace '/api' do
     content_type :json
     if @user
       page = params["page"].nil? ? 1 : params["page"].to_i
-      AudioFolder.find(params[:id]).prep_json( page, review: false ).to_json
+      AudioFolder.by_index.find(params[:id]).prep_json( page, review: false ).to_json
     end
   end
 
   get '/audio_folders/:id/process_files' do
     content_type :json
     if @user and @user.admin
-      folder = AudioFolder.find(params[:id])
+      folder = AudioFolder.by_index.find(params[:id])
       folder.digest_audio_files
       folder.update_folder_duration
       folder.destroy_wav_files_folder
@@ -129,7 +129,7 @@ namespace '/api' do
   get '/audio_folders/:id/reviewed' do
     content_type :json
     if @user and @user.admin
-      folder = AudioFolder.find(params[:id])
+      folder = AudioFolder.by_index.find(params[:id])
       folder.audio_files.just_translated.all.each do |audio|
         audio.reviewed_by!(user: @user)
       end
@@ -142,7 +142,7 @@ namespace '/api' do
   put '/audio_folders/:id' do
     content_type :json
     if @user and @user.admin
-      folder = AudioFolder.find(params[:id])
+      folder = AudioFolder.by_index.find(params[:id])
       taking_user= User.find(params[:user_id])
       if taking_user
         folder.take_by(taking_user) unless folder.audio_files.translated.any?
@@ -153,7 +153,7 @@ namespace '/api' do
 
   get '/audio_folders_dowload/:id' do
     return unless @user
-    folder = AudioFolder.find(params[:id])
+    folder = AudioFolder.by_index.find(params[:id])
     if folder.reviewed? || folder.downloaded?
       folder.build
       folder.downloaded!
@@ -178,8 +178,14 @@ namespace '/api' do
       if params.include?("short") && params["short"].to_s == 1.to_s
         User.all.map(&:min_json)
       else
-        User.all.map(&:prep_json)
+        User.all.map(&:to_h)
       end.to_json
+    end
+  end
+
+  get '/users/:id' do
+    if @user and @user.admin
+      User.find(params[:id]).to_h.to_json
     end
   end
 

@@ -5,6 +5,9 @@ window.Translator
       login: Restangular.one("api/account"),
       all: Restangular.all("api/users"),
       find: function (id) {
+        return Restangular.one("api/users", id).get();
+      },
+      folders: function (id) {
         return Restangular.one("api/users", id).getList('folders');
       }
     };

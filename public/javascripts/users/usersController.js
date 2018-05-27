@@ -6,7 +6,10 @@ window.Translator
     });
   }])
   .controller('UserController', ['$scope', 'User', '$stateParams', "$state", function($scope, User, stateParams, state) {
-    User.find(stateParams.id).then(function(folders) {
+    User.find(stateParams.id).then(function(user) {
+      $scope.user = user;
+    });
+    User.folders(stateParams.id).then(function(folders) {
       $scope.folders = folders;
     });
   }]);

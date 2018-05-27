@@ -1,18 +1,50 @@
 <div class="row">
+  <div>
+    <h1>{{ user.name }}</h1>
+  </div>
   <div class="table-responsive">
+    <table class="table table-bordered table-striped table-hover" ng-if="user">
+      <thead>
+        <tr>
+          <th>Folders</th>
+          <th>started</th>
+          <th>translated</th>
+          <th>reviewed</th>
+          <th>downloaded</th>
+          <th>delivered</th>
+          <th>paid</th>
+          <th>archived</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th>{{ user.folders.count }}</th>
+          <th>{{ user.folders.started }}</th>
+          <th>{{ user.folders.translated }}</th>
+          <th>{{ user.folders.reviewed }}</th>
+          <th>{{ user.folders.downloaded }}</th>
+          <th>{{ user.folders.delivered }}</th>
+          <th>{{ user.folders.paid }}</th>
+          <th>{{ user.folders.archived }}</th>
+        </tr>
+      </tbody>
+    </table>
+
     <table class="table table-bordered table-striped table-hover">
       <thead>
         <tr>
           <th>Folder</th>
+          <th>Created at</th>
           <th>Status</th>
-          <th>Downloaded</th>
+          <th>Update at</th>
         </tr>
       </thead>
       <tbody>
         <tr ng-repeat="folder in folders">
-          <th>{{ user.name }}</th>
-          <th>{{ user.status }}</th>
-          <th>{{ user.downloaded }}</th>
+          <th><a class="btn btn-primary" style="float:left" ui-sref="folders({id: folder.id})">{{ folder.name_short }}</a></th>
+          <th>{{ folder.created_at }}</th>
+          <th>{{ folder.status }}</th>
+          <th>{{ folder.updated_at }}</th>
         </tr>
       </tbody>
     </table>

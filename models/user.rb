@@ -8,7 +8,7 @@ class User
   field :admin, type: Boolean, default: false
 
   def audio_folders
-     AudioFolder.where( translator: self )
+     AudioFolder.by_last_updated.where( translator: self )
   end
 
   include BCrypt
