@@ -8,6 +8,7 @@ timeout 60
 pid "#{home_dir}/tmp/pids/unicorn.pid"
 stderr_path "#{home_dir}/log/unicorn.stderr.log"
 stdout_path "#{home_dir}/log/unicorn.stdout.log"
+logger Logger.new($stdout)
 
 # combine Ruby 2.0.0dev or REE with "preload_app true" for memory savings
 # http://rubyenterpriseedition.com/faq.html#adapt_apps_for_cow
