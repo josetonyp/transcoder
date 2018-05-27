@@ -4,15 +4,15 @@ module StateMachine
   end
 
   module ClassMethods
-    ["imported", "started", "translated", "reviewed", "downloaded"].each do |attribute|
+    ["imported", "started", "translated", "reviewed", "downloaded", "delivered", "paid"].each do |attribute|
       define_method("#{attribute}") do
         where(status: attribute.to_s)
       end
     end
   end
-  # [imported, started, ready, translated, reviewed, downloaded] hacer funciones para los estados
+  # [imported, started, ready, translated, reviewed, downloaded], "delivered", "paid" hacer funciones para los estados
 
-  ["imported", "started", "translated", "reviewed", "downloaded"].each do |attribute|
+  ["imported", "started", "translated", "reviewed", "downloaded", "delivered", "paid"].each do |attribute|
     define_method("#{attribute}!") do
       self.update_attributes(status: attribute.to_s)
     end

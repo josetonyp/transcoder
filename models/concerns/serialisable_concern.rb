@@ -1,4 +1,4 @@
-module StateMachine
+module Serialisable
   def self.included(base)
     base.extend ClassMethods
   end

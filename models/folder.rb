@@ -21,6 +21,7 @@ class AudioFolder
   index({ id: 1 }, {  name: "id_index" })
   index({ name: 1 }, { unique: true, name: "name_index" })
   index({ status: 1 }, { name: "status_index" })
+  index({ translator: 1, status: 1 }, { name: "translator_status_index" })
 
   before_destroy do
     remove_audio_files
@@ -30,6 +31,7 @@ class AudioFolder
   include Importable
   include Accouting
   include Downloadable
+  include Serialisable
 
   def take_by(user)
     self.translator = user

@@ -35,37 +35,7 @@ class User
     Time.at(time).gmtime.strftime('%M').to_f * (min.to_f / 60.0) + min.to_f * Time.at(time).gmtime.strftime('%H').to_f
   end
 
-  def prep_json
-    translated = audio_folders.inject(0){|t,folder| t + folder.audio_files.translated.count }
-    total = audio_folders.inject(0){|t,folder| t + folder.audio_files.count }
-    folders =
-    {
-      id: id.to_s,
-      name: name,
-      admin: admin,
-      email: email,
-      token: token,
-      audios:{
-        translated: translated,
-        total: total,
-        completed: (translated > 0) ? ((translated*100)/total).to_i : 0
-      },
-      folders: audio_folders.for_user(self).count(),
-      payrol: ""
-    }
-  end
-
-  def min_json
-    {
-      id: id.to_s,
-      name: name,
-      admin: admin
-    }
-  end
-
-  def to_json
-    prep_json.to_json
-  end
+  include ::Users::Serialisable
 
 end
 
