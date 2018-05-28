@@ -24,9 +24,10 @@ class AudioFolder
   index({ name: 1 }, { unique: true, name: "name_index" })
   index({ status: 1 }, { name: "status_index" })
   index({ translator: 1, status: 1 }, { name: "translator_status_index" })
-  index({ translator: 1, status: 1, updated_at: 1 }, { name: "translator_status_index" })
+  index({ translator: 1, status: 1, updated_at: 1 }, { name: "translator_status_updated_index" })
 
   before_destroy do
+    audio_files.destroy_all
     remove_audio_files
   end
 
@@ -54,6 +55,4 @@ class AudioFolder
     FileUtils.remove_dir(audio_wav_folder) if Dir.exists?(audio_wav_folder)
     FileUtils.remove_dir("#{audio_files_folder}") if Dir.exists?("#{audio_files_folder}")
   end
-
-
 end

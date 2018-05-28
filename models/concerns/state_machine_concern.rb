@@ -29,11 +29,11 @@ module StateMachine
     when "imported"
       started! if audio_files.translated.count > 0
     when "started"
-      translated! if audio_files.translated.count ==  audio_files.count
+      translated! if audio_files.created.count ==  0
     when "translated"
-      reviewed! if audio_files.reviewed.count  ==  audio_files.count
+      reviewed! if audio_files.translated.count  ==  0
     when "reviewed"
-      downloaded! if audio_files.reviewed.count  ==  audio_files.count
+      downloaded! if audio_files.translated.count  ==  0
     when "downloaded"
       delivered! if audio_files.where(reviewer: nil).count  ==  0
     when "delivered"
@@ -41,6 +41,7 @@ module StateMachine
     when "invoiced"
       paid!
     when "paid"
+      remove_audio_files
       archived!
     end
     touch

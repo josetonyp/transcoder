@@ -54,16 +54,6 @@ end
 
 namespace '/api' do
 
-  # Audios
-
-  get '/audio_files/review' do
-    content_type :json
-    if @user
-      page = params["page"].nil? ? 1 : params["page"].to_i
-      AudioFile.where(status:"translated").paginate( page: page, per_page: 30 ).map(&:prep_json).to_json
-    end
-  end
-
   get '/audio_files/:file' do
     content_type :json
     if @user
@@ -75,7 +65,11 @@ namespace '/api' do
     content_type :json
     if @user
       audio = AudioFile.find(params['file'])
-      audio.translate( translation: params['value'], user: @user, review: params['review'] == "true")
+      if params['review'] == "true"
+        audio.reviewed_by(user: @user)
+      else
+        audio.translated_by(translation: params['value'], user: @user)
+      end
       audio.reload.to_json
     end
   end
