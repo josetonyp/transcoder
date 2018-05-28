@@ -23,7 +23,6 @@ class AudioFolder
   belongs_to :batch, optional: true
   belongs_to :invoice, optional: true
 
-  index({ id: 1 }, {  name: "folders_id_index" })
   index({ name: 1 }, { unique: true, name: "folders_name_index" })
   index({ batch: 1 }, { name: "folders_batch_index" })
   index({ invoice: 1 }, { name: "folders_invoice_index" })

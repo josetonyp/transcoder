@@ -21,7 +21,6 @@ class AudioFile
     audio_folder.touch
   end
 
-  index({ id: 1 }, {  name: "audio_id_index" })
   index({ name: 1, audio_folder: 1 }, { unique: true, name: "audio_name_and_folder_uniq_index" })
   index({ audio_folder: 1 }, { name: "audio_folder_index" })
   index({ status: 1 }, { name: "audio_status_index" })
