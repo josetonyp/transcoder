@@ -2,7 +2,7 @@ class AudioFolder
   include Mongoid::Document
   include Mongoid::Timestamps
 
-  scope :by_index, ->(){ order_by( id: 'asc') }
+  scope :by_index, ->(){ order_by( name: 'asc') }
   scope :by_last_updated, ->(){ order_by( updated_at: 'desc') }
 
   scope :for_user, ->(user){ where(translator: user) }
