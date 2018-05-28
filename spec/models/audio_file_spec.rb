@@ -34,5 +34,4 @@ describe AudioFile do
     expect(audio_file.status).to eq('reviewed')
     expect(audio_file.status_changes.count).to eq(2)
   end
-
 end

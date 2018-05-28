@@ -1,18 +1,19 @@
 module StateMachine
+  STATUS_LIST =  ["imported", "started", "translated", "reviewed", "downloaded", "delivered",  "invoiced", "paid", "archived"]
+
   def self.included(base)
     base.extend ClassMethods
   end
 
   module ClassMethods
-    ["imported", "started", "translated", "reviewed", "downloaded", "delivered", "paid", "archived"].each do |attribute|
+    STATUS_LIST.each do |attribute|
       define_method("#{attribute}") do
         where(status: attribute.to_s)
       end
     end
   end
-  # [imported, started, ready, translated, reviewed, downloaded], "delivered", "paid", "archived" hacer funciones para los estados
 
-  ["imported", "started", "translated", "reviewed", "downloaded", "delivered", "paid", "archived"].each do |attribute|
+  STATUS_LIST.each do |attribute|
     define_method("#{attribute}!") do
       self.status_changes.create!(from: self.status, to: attribute.to_s)
       self.update_attributes(status: attribute.to_s)
@@ -26,11 +27,21 @@ module StateMachine
   def next!
     case status
     when "imported"
-      started! if translated_audio_count > 0
+      started! if audio_files.translated.count > 0
     when "started"
-      translated! if translated_audio_count ==  audio_count
+      translated! if audio_files.translated.count ==  audio_files.count
     when "translated"
-      reviewed! if reviewed_audio_count  ==  audio_count
+      reviewed! if audio_files.reviewed.count  ==  audio_files.count
+    when "reviewed"
+      downloaded! if audio_files.reviewed.count  ==  audio_files.count
+    when "downloaded"
+      delivered! if audio_files.where(reviewer: nil).count  ==  0
+    when "delivered"
+      invoiced!
+    when "invoiced"
+      paid!
+    when "paid"
+      archived!
     end
     touch
     self
@@ -39,5 +50,4 @@ module StateMachine
   def history
     status_changes.map(&:to_h)
   end
-
 end

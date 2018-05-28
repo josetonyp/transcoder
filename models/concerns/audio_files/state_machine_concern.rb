@@ -1,18 +1,19 @@
 module AudioFiles
   module StateMachine
+    STATUS_LIST = ["created", "translated", "reviewed"]
     def self.included(base)
       base.extend ClassMethods
     end
 
     module ClassMethods
-      ["created", "translated", "reviewed"].each do |attribute|
+      STATUS_LIST.each do |attribute|
         define_method(attribute) do
           where(status: attribute.to_s)
         end
       end
     end
 
-    ["created", "translated", "reviewed"].each do |attribute|
+    STATUS_LIST.each do |attribute|
       define_method("#{attribute}!") do
         self.status_changes.create!(from: self.status, to: attribute.to_s)
         self.update_attributes(status: attribute.to_s)

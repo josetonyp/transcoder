@@ -44,6 +44,7 @@ class AudioFile
   def reviewed_by(user:)
     update_attributes!(reviewer: user)
     next! unless reviewed?
+    audio_folder.next! unless audio_folder.reviewed?
   end
 
   def translated_by(translation:, user:)

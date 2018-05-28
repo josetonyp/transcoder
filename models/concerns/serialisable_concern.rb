@@ -15,7 +15,7 @@ module Serialisable
       completed: (audio_count > 0) ? ((translated_audio_count*100)/audio_count).to_i : audio_count,
       status: self.status,
       reviewed: reviewed_audio_count,
-      news: new_audio_count,
+      news: created_audio_count,
       translated: translated_audio_count,
       duration: duration && duration.gmtime.strftime('%H:%M:%S'),
       responsable: responsable,
@@ -44,15 +44,15 @@ module Serialisable
   end
 
   def translated_audio_count
-    @translated_audio_count ||= audio_files.only(:translation).where(:translation.ne => "").count
+    @translated_audio_count ||= audio_files.only(:translation).translated.count
   end
 
   def reviewed_audio_count
-    @reviewed_audio_count ||= audio_files.only(:status).where( status: "reviewed").count
+    @reviewed_audio_count ||= audio_files.only(:status).reviewed.count
   end
 
-  def new_audio_count
-    @new_audio_count ||= audio_files.only(:status).where( status: "new").count
+  def created_audio_count
+    @created_audio_count ||= audio_files.only(:status).created.count
   end
 
   private
