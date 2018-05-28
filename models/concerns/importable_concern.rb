@@ -23,6 +23,7 @@ module Importable
         folder.destroy_wav_files_folder
         folder.batch = batch
         folder.save
+        batch.update_folders_count
       end
     end
 
