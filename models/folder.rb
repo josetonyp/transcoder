@@ -16,7 +16,7 @@ class AudioFolder
   field :status, type: String, default: 'imported'
   field :downloaded, type: Boolean, default: false
 
-  belongs_to :translator, class_name: 'User'
+  belongs_to :translator, class_name: 'User', optional: true
   has_many :audio_files, dependent: :destroy # it could be embed
   embeds_many :status_changes, class_name: '::Change'
 

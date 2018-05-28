@@ -8,3 +8,14 @@ development:
         - localhost:27017
       # Define the default database name.
       database: traductor
+
+test:
+  clients:
+    default:
+      # A session can have any number of hosts. Usually 1 for a single
+      # server setup, and at least 3 for a replica set. Hosts must be
+      # an array of host:port pairs. This session is single server.
+      hosts:
+        - localhost:27017
+      # Define the default database name.
+      database: traductor_test

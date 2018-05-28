@@ -32,6 +32,8 @@ module StateMachine
     when "translated"
       reviewed! if reviewed_audio_count  ==  audio_count
     end
+    touch
+    self
   end
 
   def history

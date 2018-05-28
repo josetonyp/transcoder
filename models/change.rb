@@ -6,6 +6,7 @@ class Change
   field :to, type: String
 
   embedded_in :audio_folder
+  embedded_in :audio_file
 
   def to_h
     {

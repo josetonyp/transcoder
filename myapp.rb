@@ -152,7 +152,7 @@ namespace '/api' do
   end
 
   get '/audio_folders_dowload/:id' do
-    return unless @user
+    return unless @user and @user.admin
     folder = AudioFolder.by_index.find(params[:id])
     if folder.reviewed? || folder.downloaded?
       folder.build
