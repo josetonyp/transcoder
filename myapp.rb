@@ -84,7 +84,7 @@ namespace '/api' do
       else
         page = params["page"].nil? ? 1 : params["page"].to_i
         folders = if params[:filter].nil? || params[:filter].empty?
-          AudioFolder
+          AudioFolder.by_index
         else
           AudioFolder.by_index.where(status: params[:filter])
         end
