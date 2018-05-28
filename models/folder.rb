@@ -25,8 +25,8 @@ class AudioFolder
 
   index({ id: 1 }, {  name: "id_index" })
   index({ name: 1 }, { unique: true, name: "name_index" })
-  index({ batch: 1 }, { unique: true, name: "batch_index" })
-  index({ invoice: 1 }, { unique: true, name: "invoice_index" })
+  index({ batch: 1 }, { name: "batch_index" })
+  index({ invoice: 1 }, { name: "invoice_index" })
   index({ status: 1 }, { name: "status_index" })
   index({ translator: 1, status: 1 }, { name: "translator_status_index" })
   index({ translator: 1, status: 1, updated_at: 1 }, { name: "translator_status_updated_index" })
