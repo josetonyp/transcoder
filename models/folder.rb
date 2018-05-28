@@ -20,8 +20,13 @@ class AudioFolder
   has_many :audio_files, dependent: :destroy # it could be embed
   embeds_many :status_changes, class_name: '::Change'
 
+  belongs_to :batch, optional: true
+  belongs_to :invoice, optional: true
+
   index({ id: 1 }, {  name: "id_index" })
   index({ name: 1 }, { unique: true, name: "name_index" })
+  index({ batch: 1 }, { unique: true, name: "batch_index" })
+  index({ invoice: 1 }, { unique: true, name: "invoice_index" })
   index({ status: 1 }, { name: "status_index" })
   index({ translator: 1, status: 1 }, { name: "translator_status_index" })
   index({ translator: 1, status: 1, updated_at: 1 }, { name: "translator_status_updated_index" })

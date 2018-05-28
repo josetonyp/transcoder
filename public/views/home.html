@@ -71,6 +71,10 @@
               <a class="btn btn-warning" ui-sref="folders_review({id: folder.id})" ng-show="folder.status == 'translated' || folder.status == 'reviewed'">Review</a>
               <a class="btn" ng-class="{btn: true, 'btn-default': folder.downloaded, 'btn-success': !folder.downloaded}" ng-show="folderReady(folder)" target="_blank" href="/api/audio_folders_dowload/{{ folder.id }}">Download</a>
             </span>
+            <br>
+            <div ng-show="currentUser.admin">
+              {{ folder.batch.name }}
+            </div>
           </td>
         </tr>
       </tbody>

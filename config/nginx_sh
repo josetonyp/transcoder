@@ -1,7 +1,6 @@
 # use the socket we configured in our unicorn.rb
 upstream unicorn_server {
-  server unix: /var/run/my_app.sock;
-      fail_timeout=0;
+  server unix:/var/run/my_app.sock fail_timeout=0;
 }
 server {
   listen 80 default_server;

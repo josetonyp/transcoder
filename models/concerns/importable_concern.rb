@@ -4,9 +4,9 @@ module Importable
   end
 
   module ClassMethods
-    def import_batch(text=false)
+    def import_batch(batch=nil, text=false)
       Dir.glob("#{AudioFolder::INFOLDER}/*.zip").each do |file|
-        import(file, text)
+        import(batch, file, text)
       end
       AudioFolder.remove_indexes
       AudioFolder.create_indexes
@@ -14,13 +14,15 @@ module Importable
       AudioFile.create_indexes
     end
 
-    def import(file, text=false)
+    def import(batch=nil, file="", text=false)
       digest(file).tap do |folder|
         ap "Importing #{file} folder ..."
         folder.digest_audio_files
         folder.update_folder_duration
         folder.digest_text_files if text
         folder.destroy_wav_files_folder
+        folder.batch = batch
+        folder.save
       end
     end
 

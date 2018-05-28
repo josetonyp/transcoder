@@ -23,7 +23,8 @@ module Serialisable
       downloaded: downloaded?,
       created_at: created_at.strftime('%F %T'),
       updated_at: updated_at.strftime('%F %T'),
-      history: history
+      history: history,
+      batch: batch.to_h
     }
   end
 
