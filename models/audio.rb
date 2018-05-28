@@ -21,13 +21,13 @@ class AudioFile
     audio_folder.touch
   end
 
-  index({ id: 1 }, {  name: "id_index" })
-  index({ name: 1, audio_folder: 1 }, { unique: true, name: "name_and_folder_uniq_index" })
+  index({ id: 1 }, {  name: "audio_id_index" })
+  index({ name: 1, audio_folder: 1 }, { unique: true, name: "audio_name_and_folder_uniq_index" })
   index({ audio_folder: 1 }, { name: "audio_folder_index" })
-  index({ status: 1 }, { name: "status_index" })
+  index({ status: 1 }, { name: "audio_status_index" })
   index({ audio_folder: 1, status: 1 }, { name: "audio_folder_status_index" })
-  index({ translator: 1, status: 1 }, { name: "translator_status_index" })
-  index({ audio_folder: 1, status: 1, id: 1 }, { name: "id_audio_folder_status_index" })
+  index({ translator: 1, status: 1 }, { name: "audio_translator_status_index" })
+  index({ audio_folder: 1, status: 1, id: 1 }, { name: "audio_id_audio_folder_status_index" })
 
   def self.upfind( name, folder )
     if where( name: name, audio_folder: folder ).exists?
