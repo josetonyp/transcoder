@@ -1,0 +1,172 @@
+jpn-JPN_BMW35up_Phase2_train_201802.11.tsv.zip, 0.34, 500
+
+jpn-JPN_BMW35up_Phase2_train_201802.12.tsv.zip, 0.34, 500
+
+jpn-JPN_BMW35up_Phase2_train_201802.13.tsv.zip, 0.34, 500
+
+jpn-JPN_BMW35up_Phase2_train_201802.14.tsv.zip, 0.34, 500
+
+jpn-JPN_BMW35up_Phase2_train_201802.15.tsv.zip, 0.35, 500
+
+jpn-JPN_BMW35up_Phase2_train_201802.16.tsv.zip, 0.34, 500
+
+jpn-JPN_BMW35up_Phase2_train_201802.17.tsv.zip, 0.36, 500
+
+jpn-JPN_BMW35up_Phase2_train_201802.18.tsv.zip, 0.34, 500
+
+jpn-JPN_BMW35up_Phase2_train_201802.19.tsv.zip, 0.35, 500
+
+jpn-JPN_BMW35up_Phase2_train_201802.2.tsv.zip, 0.32, 500
+
+jpn-JPN_BMW35up_Phase2_train_201802.20.tsv.zip, 0.33, 500
+
+jpn-JPN_BMW35up_Phase2_train_201802.21.tsv.zip, 0.34, 500
+
+jpn-JPN_BMW35up_Phase2_train_201802.22.tsv.zip, 0.35, 500
+
+jpn-JPN_BMW35up_Phase2_train_201802.23.tsv.zip, 0.34, 500
+
+jpn-JPN_BMW35up_Phase2_train_201802.24.tsv.zip, 0.34, 500
+
+jpn-JPN_BMW35up_Phase2_train_201802.25.tsv.zip, 0.35, 500
+
+jpn-JPN_BMW35up_Phase2_train_201802.26.tsv.zip, 0.34, 500
+
+jpn-JPN_BMW35up_Phase2_train_201802.27.tsv.zip, 0.33, 500
+
+jpn-JPN_BMW35up_Phase2_train_201802.28.tsv.zip, 0.34, 500
+
+jpn-JPN_BMW35up_Phase2_train_201802.29.tsv.zip, 0.35, 500
+
+jpn-JPN_BMW35up_Phase2_train_201802.3.tsv.zip, 0.34, 500
+
+jpn-JPN_BMW35up_Phase2_train_201802.30.tsv.zip, 0.35, 500
+
+jpn-JPN_BMW35up_Phase2_train_201802.31.tsv.zip, 0.34, 500
+
+jpn-JPN_BMW35up_Phase2_train_201802.32.tsv.zip, 0.34, 500
+
+jpn-JPN_BMW35up_Phase2_train_201802.33.tsv.zip, 0.34, 500
+
+jpn-JPN_BMW35up_Phase2_train_201802.34.tsv.zip, 0.34, 500
+
+jpn-JPN_BMW35up_Phase2_train_201802.35.tsv.zip, 0.34, 500
+
+jpn-JPN_BMW35up_Phase2_train_201802.36.tsv.zip, 0.35, 500
+
+jpn-JPN_BMW35up_Phase2_train_201802.37.tsv.zip, 0.34, 500
+
+jpn-JPN_BMW35up_Phase2_train_201802.38.tsv.zip, 0.34, 500
+
+jpn-JPN_BMW35up_Phase2_train_201802.39.tsv.zip, 0.34, 500
+
+jpn-JPN_BMW35up_Phase2_train_201802.4.tsv.zip, 0.36, 500
+
+jpn-JPN_BMW35up_Phase2_train_201802.40.tsv.zip, 0.34, 500
+
+jpn-JPN_BMW35up_Phase2_train_201802.41.tsv.zip, 0.34, 500
+
+jpn-JPN_BMW35up_Phase2_train_201802.42.tsv.zip, 0.35, 500
+
+jpn-JPN_BMW35up_Phase2_train_201802.43.tsv.zip, 0.34, 500
+
+jpn-JPN_BMW35up_Phase2_train_201802.44.tsv.zip, 0.34, 500
+
+jpn-JPN_BMW35up_Phase2_train_201802.45.tsv.zip, 0.35, 500
+
+jpn-JPN_BMW35up_Phase2_train_201802.46.tsv.zip, 0.34, 500
+
+jpn-JPN_BMW35up_Phase2_train_201802.47.tsv.zip, 0.34, 500
+
+jpn-JPN_BMW35up_Phase2_train_201802.48.tsv.zip, 0.34, 500
+
+jpn-JPN_BMW35up_Phase2_train_201802.49.tsv.zip, 0.35, 500
+
+jpn-JPN_BMW35up_Phase2_train_201802.5.tsv.zip, 0.34, 500
+
+jpn-JPN_BMW35up_Phase2_train_201802.50.tsv.zip, 0.34, 500
+
+jpn-JPN_BMW35up_Phase2_train_201802.51.tsv.zip, 0.34, 500
+
+jpn-JPN_BMW35up_Phase2_train_201802.52.tsv.zip, 0.34, 500
+
+jpn-JPN_BMW35up_Phase2_train_201802.53.tsv.zip, 0.35, 500
+
+jpn-JPN_BMW35up_Phase2_train_201802.54.tsv.zip, 0.34, 500
+
+jpn-JPN_BMW35up_Phase2_train_201802.55.tsv.zip, 0.34, 500
+
+jpn-JPN_BMW35up_Phase2_train_201802.56.tsv.zip, 0.34, 500
+
+jpn-JPN_BMW35up_Phase2_train_201802.57.tsv.zip, 0.34, 500
+
+jpn-JPN_BMW35up_Phase2_train_201802.58.tsv.zip, 0.34, 500
+
+jpn-JPN_BMW35up_Phase2_train_201802.59.tsv.zip, 0.33, 500
+
+jpn-JPN_BMW35up_Phase2_train_201802.6.tsv.zip, 0.34, 500
+
+jpn-JPN_BMW35up_Phase2_train_201802.60.tsv.zip, 0.34, 500
+
+jpn-JPN_BMW35up_Phase2_train_201802.61.tsv.zip, 0.35, 500
+
+jpn-JPN_BMW35up_Phase2_train_201802.62.tsv.zip, 0.34, 500
+
+jpn-JPN_BMW35up_Phase2_train_201802.63.tsv.zip, 0.35, 500
+
+jpn-JPN_BMW35up_Phase2_train_201802.64.tsv.zip, 0.35, 500
+
+jpn-JPN_BMW35up_Phase2_train_201802.65.tsv.zip, 0.34, 500
+
+jpn-JPN_BMW35up_Phase2_train_201802.66.tsv.zip, 0.33, 500
+
+jpn-JPN_BMW35up_Phase2_train_201802.67.tsv.zip, 0.34, 500
+
+jpn-JPN_BMW35up_Phase2_train_201802.68.tsv.zip, 0.34, 500
+
+jpn-JPN_BMW35up_Phase2_train_201802.69.tsv.zip, 0.34, 500
+
+jpn-JPN_BMW35up_Phase2_train_201802.7.tsv.zip, 0.35, 500
+
+jpn-JPN_BMW35up_Phase2_train_201802.70.tsv.zip, 0.35, 500
+
+jpn-JPN_BMW35up_Phase2_train_201802.71.tsv.zip, 0.34, 500
+
+jpn-JPN_BMW35up_Phase2_train_201802.72.tsv.zip, 0.35, 500
+
+jpn-JPN_BMW35up_Phase2_train_201802.73.tsv.zip, 0.35, 500
+
+jpn-JPN_BMW35up_Phase2_train_201802.74.tsv.zip, 0.34, 500
+
+jpn-JPN_BMW35up_Phase2_train_201802.75.tsv.zip, 0.35, 500
+
+jpn-JPN_BMW35up_Phase2_train_201802.76.tsv.zip, 0.34, 500
+
+jpn-JPN_BMW35up_Phase2_train_201802.77.tsv.zip, 0.34, 500
+
+jpn-JPN_BMW35up_Phase2_train_201802.78.tsv.zip, 0.34, 500
+
+jpn-JPN_BMW35up_Phase2_train_201802.79.tsv.zip, 0.35, 500
+
+jpn-JPN_BMW35up_Phase2_train_201802.8.tsv.zip, 0.34, 500
+
+jpn-JPN_BMW35up_Phase2_train_201802.80.tsv.zip, 0.34, 500
+
+jpn-JPN_BMW35up_Phase2_train_201802.81.tsv.zip, 0.34, 500
+
+jpn-JPN_BMW35up_Phase2_train_201802.82.tsv.zip, 0.35, 500
+
+jpn-JPN_BMW35up_Phase2_train_201802.83.tsv.zip, 0.34, 500
+
+jpn-JPN_BMW35up_Phase2_train_201802.84.tsv.zip, 0.34, 500
+
+jpn-JPN_BMW35up_Phase2_train_201802.85.tsv.zip, 0.35, 500
+
+jpn-JPN_BMW35up_Phase2_train_201802.86.tsv.zip, 0.34, 500
+
+jpn-JPN_BMW35up_Phase2_train_201802.87.tsv.zip, 0.33, 500
+
+jpn-JPN_BMW35up_Phase2_train_201802.88.tsv.zip, 0.35, 500
+
+jpn-JPN_BMW35up_Phase2_train_201802.9.tsv.zip, 0.35, 500
+

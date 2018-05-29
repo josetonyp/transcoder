@@ -36,6 +36,13 @@ module Serialisable
     })
   end
 
+  def short_h
+    {
+      name: name,
+      duration: percent_duration
+    }
+  end
+
   def to_json
     prep_json.to_json
   end

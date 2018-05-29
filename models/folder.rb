@@ -13,6 +13,7 @@ class AudioFolder
 
   field :name, type: String
   field :duration, type: Time
+  field :percent_duration, type: Integer
   field :status, type: String, default: 'imported'
   field :downloaded, type: Boolean, default: false
 
@@ -50,6 +51,11 @@ class AudioFolder
   def touch
     self.updated_at = Time.now.utc
     self.save
+  end
+
+
+  def self.amount_in_money(fee)
+    (self.map(&:percent_duration) * fee).to_f / 100
   end
 
   private

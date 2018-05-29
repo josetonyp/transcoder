@@ -17,6 +17,7 @@ require 'pry-doc'
 
 Dir.glob("models/concerns/**/*.rb").each {|file| require_relative file }
 Dir.glob("models/*.rb").each {|file| require_relative file }
+Dir.glob("models/importers/*.rb").each {|file| require_relative file }
 
 
 APPROOT = File.expand_path(File.dirname(__FILE__))
