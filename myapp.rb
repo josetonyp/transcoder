@@ -125,8 +125,8 @@ namespace '/api' do
     content_type :json
     if @user and @user.admin
       folder = AudioFolder.by_index.find(params[:id])
-      folder.audio_files.just_translated.all.each do |audio|
-        audio.reviewed_by!(user: @user)
+      folder.audio_files.translated.all.each do |audio|
+        audio.reviewed_by(user: @user)
       end
       folder.next!
       page = params["page"].nil? ? 1 : params["page"].to_i

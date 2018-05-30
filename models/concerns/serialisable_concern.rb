@@ -12,11 +12,11 @@ module Serialisable
       name: name,
       name_short: name_short,
       audios: audio_count,
-      completed: (audio_count > 0) ? ((translated_audio_count*100)/audio_count).to_i : audio_count,
+      completed: (audio_count > 0) ? ((completed_audio_count*100)/audio_count).to_i : audio_count,
       status: self.status,
       reviewed: reviewed_audio_count,
       news: created_audio_count,
-      translated: translated_audio_count,
+      translated: completed_audio_count,
       duration: duration && duration.gmtime.strftime('%H:%M:%S'),
       responsable: responsable,
       hasResponsable: !responsable.nil?,
@@ -61,6 +61,10 @@ module Serialisable
 
   def created_audio_count
     @created_audio_count ||= audio_files.only(:status).created.count
+  end
+
+  def completed_audio_count
+    @translated_audio_count ||= audio_files.only(:translation).or({status: "translated"}, {status: "reviewed"}).count
   end
 
   private
