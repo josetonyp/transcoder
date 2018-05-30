@@ -53,11 +53,6 @@ class AudioFolder
     self.save
   end
 
-
-  def self.amount_in_money(fee)
-    (self.map(&:percent_duration) * fee).to_f / 100
-  end
-
   private
 
   def remove_audio_files

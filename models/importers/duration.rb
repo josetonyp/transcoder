@@ -7,7 +7,7 @@ module Importers
           name = name.to_s.gsub(".zip", "")
           duration = (duration.strip.to_f * 100).to_i
           ap "importing #{name} with: #{duration}"
-          # import(name, duration)
+          import(name, duration)
           ap "-"*60
         end
       end
