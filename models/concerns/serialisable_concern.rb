@@ -1,3 +1,5 @@
+require 'time_difference'
+
 module Serialisable
   def self.included(base)
     base.extend ClassMethods
@@ -65,6 +67,11 @@ module Serialisable
 
   def completed_audio_count
     @translated_audio_count ||= audio_files.only(:translation).or({status: "translated"}, {status: "reviewed"}).count
+  end
+
+  def working_time
+    times = audio_files.map{|f| f.status_changes.first.created_at }.sort
+    Time.at((times.last - times.first).to_i.abs).utc.strftime("%H:%M:%S")
   end
 
   private
