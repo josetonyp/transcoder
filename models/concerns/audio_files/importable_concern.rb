@@ -1,5 +1,7 @@
 module AudioFiles
   module Importable
+    OUTFOLDER = 'public/output'
+
     def self.included(base)
       base.extend ClassMethods
     end
