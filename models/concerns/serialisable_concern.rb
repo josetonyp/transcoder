@@ -70,7 +70,7 @@ module Serialisable
   end
 
   def working_time
-    times = audio_files.map{|f| f.status_changes.first.created_at }.sort
+    times = AudioFolder.first.audio_files.map{|f| f.status_changes.where(to: "translated").first.created_at }.sort
     Time.at((times.last - times.first).to_i.abs).utc.strftime("%H:%M:%S")
   end
 
