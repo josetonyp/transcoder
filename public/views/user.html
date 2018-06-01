@@ -1,7 +1,5 @@
 <div class="row">
-  <div>
-    <h1>{{ user.name }}</h1>
-  </div>
+  <div ng-include="'views/shared/user.html'"></div>
   <div class="table-responsive">
     <table class="table table-bordered table-striped table-hover" ng-if="user">
       <thead>

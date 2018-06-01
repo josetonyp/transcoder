@@ -170,10 +170,11 @@ namespace '/api' do
 
   get '/users' do
     if @user and @user.admin
+      users = AudioFolder.includes(:translator).distinct(:translator).compact.map{|id| User.find(id)}
       if params.include?("short") && params["short"].to_s == 1.to_s
-        User.all.map(&:min_json)
+        users.map(&:min_json)
       else
-        User.all.map(&:to_h)
+        users.map(&:to_h)
       end.to_json
     end
   end
@@ -189,6 +190,13 @@ namespace '/api' do
       @tuser = User.find(params[:id])
       @audio_folders = @tuser.audio_folders
       @audio_folders.map(&:as_audio_attributes).to_json
+    end
+  end
+
+  get '/users/:id/invoices' do
+    if @user and @user.admin
+      user = User.find(params[:id])
+      AudioFolder.for_user(user).map(&:invoice).uniq.map{|i| i.to_h(user)}.to_json
     end
   end
 

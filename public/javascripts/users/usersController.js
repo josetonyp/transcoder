@@ -12,4 +12,13 @@ window.Translator
     User.folders(stateParams.id).then(function(folders) {
       $scope.folders = folders;
     });
+  }])
+  .controller('UserInvoicesController', ['$scope', 'User', '$stateParams', "$state", function($scope, User, stateParams, state) {
+    User.find(stateParams.id).then(function(user) {
+      $scope.user = user;
+    });
+
+    User.invoices(stateParams.id).then(function(invoices) {
+      $scope.invoices = invoices;
+    });
   }]);

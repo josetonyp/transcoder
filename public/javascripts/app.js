@@ -63,6 +63,13 @@ window.Translator
         controller: 'UserController'
       })
 
+      .state('user_invoices', {
+        url: '/users/:id/invoices',
+        parent: 'app',
+        templateUrl: '/views/user_invoices.html',
+        controller: 'UserInvoicesController'
+      })
+
       .state('layout', {
         abstract: true,
         templateUrl: '/views/layout.html',

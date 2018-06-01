@@ -10,9 +10,7 @@
           <th>translated</th>
           <th>reviewed</th>
           <th>downloaded</th>
-          <th>delivered</th>
-          <th>paid</th>
-          <th>archived</th>
+          <th>Actions</th>
         </tr>
       </thead>
       <tbody>
@@ -23,9 +21,9 @@
           <th>{{ user.folders.translated }}</th>
           <th>{{ user.folders.reviewed }}</th>
           <th>{{ user.folders.downloaded }}</th>
-          <th>{{ user.folders.delivered }}</th>
-          <th>{{ user.folders.paid }}</th>
-          <th>{{ user.folders.archived }}</th>
+          <th><div ng-if="currentUser.admin">
+              <a class="btn btn-primary" style="float:left" ui-sref="user_invoices({id: user.id})">Invoices</a>
+            </div></th>
         </tr>
       </tbody>
     </table>

@@ -9,6 +9,9 @@ window.Translator
       },
       folders: function (id) {
         return Restangular.one("api/users", id).getList('folders');
+      },
+      invoices: function (id) {
+        return Restangular.one("api/users", id).getList('invoices');
       }
     };
   }]);
