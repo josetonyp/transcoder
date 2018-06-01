@@ -170,7 +170,7 @@ namespace '/api' do
 
   get '/users' do
     if @user and @user.admin
-      users = AudioFolder.includes(:translator).distinct(:translator).compact.map{|id| User.find(id)}
+      users = User.with_folders
       if params.include?("short") && params["short"].to_s == 1.to_s
         users.map(&:min_json)
       else
@@ -194,7 +194,7 @@ namespace '/api' do
   end
 
   get '/users/:id/invoices' do
-    if @user and @user.admin
+    if @user
       user = User.find(params[:id])
       AudioFolder.for_user(user).map(&:invoice).uniq.map{|i| i.to_h(user)}.to_json
     end
@@ -226,6 +226,27 @@ namespace '/api' do
 
   post '/account/logout' do
     session.destroy
+  end
+
+  get '/invoices' do
+    if @user and @user.admin
+      Invoice.all.map(&:to_h).to_json
+    end
+  end
+
+  get '/invoices/:id' do
+    if @user and @user.admin
+      Invoice.find(params[:id]).to_h.to_json
+    end
+  end
+
+  get '/invoices/:id/download' do
+    if @user and @user.admin
+      invoice = Invoice.find(params[:id])
+      content_type 'application/csv'
+      attachment "invoice_#{invoice.name}.csv"
+      invoice.to_csv
+    end
   end
 
 end

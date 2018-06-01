@@ -8,8 +8,11 @@
         <li ui-sref-active="active">
           <a  ui-sref-opts="{reload: true}" ui-sref="home()">Folders {{folders_count}}</a>
         </li>
-        <li ui-sref-active="active">
+        <li ui-sref-active="active" ng-if="currentUser && currentUser.admin">
           <a ui-sref-opts="{reload: true}" ui-sref="users()">Users</a>
+        </li>
+        <li ui-sref-active="active" ng-if="currentUser && currentUser.admin">
+          <a ui-sref-opts="{reload: true}" ui-sref="invoices()">Invoices</a>
         </li>
       </ul>
     </div>

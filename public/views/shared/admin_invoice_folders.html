@@ -7,12 +7,14 @@
       <thead>
         <tr>
           <th>Name</th>
+          <th>cost</th>
           <th>amount</th>
         </tr>
       </thead>
       <tbody>
         <tr ng-repeat="folder in invoice.folders">
           <td>{{ folder.name }}</td>
+          <td>{{ folder.cost }}</td>
           <td>{{ folder.amount }}</td>
         </tr>
       </tbody>
@@ -20,6 +22,7 @@
         <tr>
           <td>Total:</td>
           <td>{{invoice.total}}</td>
+          <td>{{invoice.total_amount}}</td>
         </tr>
       </tfoot>
     </table>

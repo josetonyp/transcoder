@@ -6,6 +6,8 @@ class Invoice
 
   field :name, type: String
   field :folders_count, type: Integer
+  field :cost, type: Integer, default: 35
+  field :amount, type: Integer, default: 58
 
   def to_h(user=nil)
     if user
@@ -13,6 +15,10 @@ class Invoice
     else
       Accouting::AdminInvoice.new(self).to_h
     end
+  end
+
+  def to_csv
+    Accouting::AdminInvoice.new(self).to_csv
   end
 
   def update_folders_count
@@ -41,6 +47,7 @@ module Accouting
 
     def to_h
       {
+        id: @invoice.id.to_s,
         name: @invoice.name,
         created_at: @invoice.created_at.strftime('%F %T'),
         folders_count: folders_count,
@@ -93,9 +100,10 @@ module Accouting
   class AdminInvoice < Invoice
     def to_h
       super.merge({
+        folders:  audio_folders_with_fee,
         total_amount:  total_amount,
         achieved_amount: achieved_amount,
-        revenue_amount: revenue_amount,
+        revenue_amount: revenue_amount
       })
     end
 
@@ -110,6 +118,40 @@ module Accouting
     def revenue_amount
       juju = User.where(name: 'Juju').first
       amount_in_money(@audio_folders.for_user(juju), cost) + total_amount - total_cost
+    end
+
+    def audio_folders_with_fee
+      @audio_folders.map(&:short_h).map do |folder|
+        folder.merge(cost: (cost * folder[:duration]).to_f / 100)
+              .merge(amount: (fee * folder[:duration]).to_f / 100)
+      end
+    end
+
+    def total_duration
+      @audio_folders.sum(:percent_duration).to_f / 100
+    end
+
+    def to_csv
+      CSV.generate do |csv|
+        csv << ["Admin Invoice"]
+        csv << ["Folder", "duration", "cost", "amount"]
+        audio_folders_with_fee.each do |folder|
+          csv << [folder[:name], folder[:duration].to_f / 100, folder[:cost], folder[:amount]]
+        end
+        csv << ["Total", total_duration, total_cost, total_amount]
+        csv << [""]
+
+        User.with_folders.each do |user|
+          invoice = @invoice.to_h(user)
+          csv << ["#{user.name} Invoice"]
+          csv << ["Folder", "amount"]
+          invoice[:folders].each do |folder|
+            csv << [folder[:name], folder[:amount]]
+          end
+          csv << ["Total", invoice[:total]]
+          csv << [""]
+        end
+      end
     end
   end
 end

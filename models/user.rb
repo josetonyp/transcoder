@@ -37,5 +37,8 @@ class User
 
   include ::Users::Serialisable
 
+  def self.with_folders
+    AudioFolder.includes(:translator).distinct(:translator).compact.map{|id| User.find(id)}
+  end
 end
 

@@ -70,6 +70,20 @@ window.Translator
         controller: 'UserInvoicesController'
       })
 
+      .state('invoice', {
+        url: '/invoices/:id',
+        parent: 'app',
+        templateUrl: '/views/invoice.html',
+        controller: 'InvoiceController'
+      })
+
+      .state('invoices', {
+        url: '/invoices',
+        parent: 'app',
+        templateUrl: '/views/invoices.html',
+        controller: 'InvoicesController'
+      })
+
       .state('layout', {
         abstract: true,
         templateUrl: '/views/layout.html',
