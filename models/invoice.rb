@@ -98,6 +98,7 @@ module Accouting
   end
 
   class AdminInvoice < Invoice
+    using Refinements::FloatComma
     def to_h
       super.merge({
         folders:  audio_folders_with_fee,
@@ -132,13 +133,13 @@ module Accouting
     end
 
     def to_csv
-      CSV.generate do |csv|
+      CSV.generate(col_sep: "\t") do |csv|
         csv << ["Admin Invoice"]
         csv << ["Folder", "duration", "cost", "amount"]
         audio_folders_with_fee.each do |folder|
-          csv << [folder[:name], folder[:duration].to_f / 100, folder[:cost], folder[:amount]]
+          csv << [folder[:name], (folder[:duration].to_f / 100).to_comma_string, folder[:cost].to_comma_string, folder[:amount].to_comma_string]
         end
-        csv << ["Total", total_duration, total_cost, total_amount]
+        csv << ["Total", total_duration, total_cost.to_comma_string, total_amount.to_comma_string]
         csv << [""]
 
         User.with_folders.each do |user|
@@ -146,9 +147,9 @@ module Accouting
           csv << ["#{user.name} Invoice"]
           csv << ["Folder", "amount"]
           invoice[:folders].each do |folder|
-            csv << [folder[:name], folder[:amount]]
+            csv << [folder[:name], folder[:amount].to_comma_string]
           end
-          csv << ["Total", invoice[:total]]
+          csv << ["Total", invoice[:total].to_comma_string]
           csv << [""]
         end
       end
