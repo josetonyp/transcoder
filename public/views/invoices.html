@@ -1,33 +1,31 @@
 <div>
   <h1>Invoices</h1>
-  <div ng-repeat="invoice in invoices">
-    <div class="table-responsive">
-      <table class="table table-bordered table-striped table-hover" >
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Folders</th>
-            <th>Translated</th>
-            <th>Reviewed</th>
-            <th>cost</th>
-            <th>amount</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr ng-repeat="invoice in invoices">
-            <td>
-              <a class="btn btn-primary" style="float:left" ui-sref="invoice({id: invoice.id})">{{ invoice.name }}</a>
-            </td>
-            <td>{{ invoice.folders_count }}</td>
-            <td>{{ invoice.translated }}</td>
-            <td>{{ invoice.reviewed }}</td>
-            <td>{{ invoice.total }}</td>
-            <td>{{ invoice.total_amount }}</td>
-            <td><a class="btn btn-primary" target="_blank" style="float:left" href="/api/invoices/{{ invoice.id }}/download">Download</a></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+  <div class="table-responsive">
+    <table class="table table-bordered table-striped table-hover" >
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Folders</th>
+          <th>Translated</th>
+          <th>Reviewed</th>
+          <th>cost</th>
+          <th>amount</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="invoice in invoices">
+          <td>
+            <a class="btn btn-primary" style="float:left" ui-sref="invoice({id: invoice.id})">{{ invoice.name }}</a>
+          </td>
+          <td>{{ invoice.folders_count }}</td>
+          <td>{{ invoice.translated }}</td>
+          <td>{{ invoice.reviewed }}</td>
+          <td>{{ invoice.total }}</td>
+          <td>{{ invoice.total_amount }}</td>
+          <td><a class="btn btn-primary" target="_blank" style="float:left" href="/api/invoices/{{ invoice.id }}/download">Download</a></td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </div>
